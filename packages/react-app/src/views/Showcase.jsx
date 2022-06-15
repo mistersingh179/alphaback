@@ -35,6 +35,10 @@ const YesNftBox = props => {
         bordered={true}
       >
         <Card.Meta title="BAYC" description="https://opensea.io/BAYC" />
+        <Divider />
+        PS: This is a placeholder image. We are actively looking for a promoter.{' '}
+        If you know one, please send them{' '}
+        <a href="https://alphaback.xyz/promote.html" target={'_blank'}>this</a> way.
       </Card>
     </div>
   );
@@ -43,7 +47,7 @@ const YesNftBox = props => {
 export default function Showcase(props) {
   return (
     <div>
-      <NoNftBox />
+      <YesNftBox />
     </div>
   );
 }
