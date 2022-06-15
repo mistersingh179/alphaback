@@ -29,7 +29,7 @@ const YesNftBox = props => {
         cover={
           <img
             alt="example"
-            src="https://img.seadn.io/files/a0255505b78cae1b52485c3c0cd62d29.png?fit=max&auto=format&w=600"
+            src="https://lh3.googleusercontent.com/ZreTUX9WgE5LIwD7pEBTj5uZc3k7nRtedG6OmrcpvNjDsM8Q9qr4tkRSAgrqoSvzoTHpj2aqM7ueGNw-AR1QEv38QTR3a4gu0SiBPQ=w600"
           />
         }
         bordered={true}
