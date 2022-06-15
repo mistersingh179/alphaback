@@ -73,19 +73,19 @@ export default function Account({
           fontSize={20}
         />
       )}
-      <Balance address={address} provider={localProvider} price={price} size={20} />
-      {!isContract && (
-        <Wallet
-          address={address}
-          provider={localProvider}
-          signer={userSigner}
-          ensProvider={mainnetProvider}
-          price={price}
-          color={currentTheme === "light" ? "#1890ff" : "#2caad9"}
-          size={22}
-          padding={"0px"}
-        />
-      )}
+      {/*<Balance address={address} provider={localProvider} price={price} size={20} />*/}
+      {/*{!isContract && (*/}
+      {/*  <Wallet*/}
+      {/*    address={address}*/}
+      {/*    provider={localProvider}*/}
+      {/*    signer={userSigner}*/}
+      {/*    ensProvider={mainnetProvider}*/}
+      {/*    price={price}*/}
+      {/*    color={currentTheme === "light" ? "#1890ff" : "#2caad9"}*/}
+      {/*    size={22}*/}
+      {/*    padding={"0px"}*/}
+      {/*  />*/}
+      {/*)}*/}
     </span>
   );
 

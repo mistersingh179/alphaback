@@ -4,6 +4,7 @@ import React from "react";
 import { NETWORK } from "../constants";
 
 function NetworkDisplay({
+  address,
   NETWORKCHECK,
   localChainId,
   selectedChainId,
@@ -88,7 +89,7 @@ function NetworkDisplay({
         </div>
       );
     }
-  } else {
+  } else if(address) {
     networkDisplay = USE_NETWORK_SELECTOR ? null : (
       <div style={{ zIndex: -1, position: "absolute", right: 150, top: 25, padding: 16, color: targetNetwork.color }}>
         {targetNetwork.name}

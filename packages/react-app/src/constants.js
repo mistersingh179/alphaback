@@ -1,17 +1,13 @@
 // MY INFURA_ID, SWAP IN YOURS FROM https://infura.io/dashboard/ethereum
-export const INFURA_ID = "460f40a260564ac4a4f4b3fffb032dad";
+export const INFURA_ID = process.env.REACT_APP_INFURA_PROJECT_ID;
 
 // MY ETHERSCAN_ID, SWAP IN YOURS FROM https://etherscan.io/myapikey
-export const ETHERSCAN_KEY = "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW";
+export const ETHERSCAN_KEY = process.env.REACT_APP_ETHER_SCAN_API_KEY_TOKEN;
 
 // BLOCKNATIVE ID FOR Notify.js:
-export const BLOCKNATIVE_DAPPID = "0b58206a-f3c0-4701-a62f-73c7243e8c77";
+export const BLOCKNATIVE_DAPPID = process.env.REACT_APP_BLOCKNATIVE_KEY;
 
-export const ALCHEMY_KEY = "oKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
-
-const localRpcUrl = process.env.REACT_APP_CODESPACES
-  ? `https://${window.location.hostname.replace("3000", "8545")}`
-  : "http://" + (global.window ? window.location.hostname : "localhost") + ":8545";
+export const ALCHEMY_KEY = process.env.REACT_APP_ALCHEMY_API_KEY;
 
 export const NETWORKS = {
   localhost: {
@@ -19,7 +15,8 @@ export const NETWORKS = {
     color: "#666666",
     chainId: 31337,
     blockExplorer: "",
-    rpcUrl: localRpcUrl,
+    // rpcUrl: "http://" + (global.window ? window.location.hostname : "localhost") + ":8545",
+    rpcUrl: "http://localhost:8545",
   },
   mainnet: {
     name: "mainnet",
@@ -75,8 +72,8 @@ export const NETWORKS = {
     color: "#2bbdf7",
     chainId: 137,
     price: 1,
-    gasPrice: 1000000000,
-    rpcUrl: "https://polygon-rpc.com/",
+    gasPrice: 50000000000, // 50 gwei
+    rpcUrl: `https://polygon-mainnet.infura.io/v3/${INFURA_ID}`,
     blockExplorer: "https://polygonscan.com/",
   },
   mumbai: {
@@ -84,8 +81,8 @@ export const NETWORKS = {
     color: "#92D9FA",
     chainId: 80001,
     price: 1,
-    gasPrice: 1000000000,
-    rpcUrl: "https://rpc-mumbai.maticvigil.com",
+    gasPrice: 50000000000, // 50 gwei
+    rpcUrl: `https://polygon-mumbai.infura.io/v3/${INFURA_ID}`,
     faucet: "https://faucet.polygon.technology/",
     blockExplorer: "https://mumbai.polygonscan.com/",
   },
@@ -204,7 +201,7 @@ export const NETWORKS = {
     chainId: 1281,
     blockExplorer: "https://moonbeam-explorer.netlify.app/",
     rpcUrl: "http://127.0.0.1:9933",
-  },
+  }
 };
 
 export const NETWORK = chainId => {
@@ -213,4 +210,12 @@ export const NETWORK = chainId => {
       return NETWORKS[n];
     }
   }
+};
+
+export const chainToName = {
+  1: "mainnet",
+  4: "rinkeby",
+  31337: "localhost",
+  80001: "mumbai",
+  137: "polygon",
 };
