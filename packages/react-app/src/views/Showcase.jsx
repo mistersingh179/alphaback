@@ -1,9 +1,10 @@
 import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
 import { Address, Balance, Events } from "../components";
+import moment from 'moment'
 
 const NoNftBox = props => {
   return (
@@ -36,15 +37,27 @@ const YesNftBox = props => {
       >
         <Card.Meta title="BAYC" description="https://opensea.io/BAYC" />
         <Divider />
-        PS: This is a placeholder image. We are actively looking for a promoter.{' '}
-        If you know one, please send them{' '}
-        <a href="https://alphaback.xyz/promote.html" target={'_blank'}>this</a> way.
+        PS: This is a placeholder image. We are actively looking for a promoter. If you know one, please send them{" "}
+        <a href="https://alphaback.xyz/promote.html" target={"_blank"}>
+          this
+        </a>{" "}
+        way.
       </Card>
     </div>
   );
 };
 
 export default function Showcase(props) {
+  const { readContracts } = props;
+  useEffect(() => {
+    const getPromotion = async () => {
+      if (readContracts && readContracts.Showcase) {
+        const result = await readContracts.Showcase.promotions(moment().format("YYYY-MM-DD"));
+        console.log("*** result: ", result);
+      }
+    };
+    getPromotion();
+  }, [readContracts, readContracts && readContracts.Showcase]);
   return (
     <div>
       <YesNftBox />

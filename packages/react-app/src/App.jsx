@@ -29,7 +29,7 @@ import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import { Home, ExampleUI, Hints, Subgraph, Showcase } from "./views";
+import { Home, ExampleUI, Hints, Subgraph, Showcase, Promotions } from './views'
 import { useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
@@ -58,7 +58,7 @@ let initialNetwork = NETWORKS[process.env.REACT_APP_INITIAL_NETWORK]; // <------
 // 😬 Sorry for all the console logging
 const DEBUG = true;
 const NETWORKCHECK = true;
-const USE_BURNER_WALLET = false; // process.env.REACT_APP_USE_BURNER_WALLET === "true"; // toggle burner wallet feature
+const USE_BURNER_WALLET = process.env.REACT_APP_USE_BURNER_WALLET === "true"; // toggle burner wallet feature
 const USE_NETWORK_SELECTOR = false;
 
 const web3Modal = Web3ModalSetup();
@@ -253,8 +253,8 @@ function App(props) {
         link={"https://alphaback.xyz"}
       >
         {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
-        <div style={{ position: "relative", display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", flex: 1 }}>
+        <div>
+          <div>
             {USE_NETWORK_SELECTOR && (
               <div style={{ marginRight: 20 }}>
                 <NetworkSwitch
@@ -297,7 +297,25 @@ function App(props) {
         </Route>
         <Route exact path="/showcase">
           {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
-          <Showcase />
+          <Showcase
+            readContracts={readContracts}
+            address={address}
+            userSigner={userSigner}
+            mainnetProvider={mainnetProvider}
+            localProvider={localProvider}
+          />
+        </Route>
+        <Route exact path="/promotions">
+          {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
+          <Promotions
+            tx={tx}
+            writeContracts={writeContracts}
+            readContracts={readContracts}
+            address={address}
+            userSigner={userSigner}
+            mainnetProvider={mainnetProvider}
+            localProvider={localProvider}
+          />
         </Route>
         <Route>
           <Menu style={{ textAlign: "center", marginTop: 20 }} selectedKeys={[location.pathname]} mode="horizontal">
@@ -306,6 +324,9 @@ function App(props) {
             </Menu.Item>
             <Menu.Item key="/showcase">
               <Link to="/showcase">Showcase</Link>
+            </Menu.Item>
+            <Menu.Item key="/promotions">
+              <Link to="/promotions">Promotions</Link>
             </Menu.Item>
             <Menu.Item key="/debug">
               <Link to="/debug">Debug Contracts</Link>
@@ -337,7 +358,7 @@ function App(props) {
             */}
 
               <Contract
-                name="YourContract"
+                name="Showcase"
                 price={price}
                 signer={userSigner}
                 provider={localProvider}

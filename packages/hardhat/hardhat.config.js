@@ -29,7 +29,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 const defaultNetwork = "localhost";
 
-const mainnetGwei = 21;
+const mainnetGwei = 71;
 
 function mnemonic() {
   try {
@@ -46,15 +46,22 @@ function mnemonic() {
 
 module.exports = {
   defaultNetwork,
-
+  tenderly: {
+    project: "project",
+    username: "mistersingh179",
+  },
   /**
    * gas reporter configuration that let's you know
    * an estimate of gas for contract deployments and function calls
    * More here: https://hardhat.org/plugins/hardhat-gas-reporter.html
    */
   gasReporter: {
+    token: "ETH",
+    gasPrice: "76",
+    gasPriceApi:
+      "https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=4GNTDCMXVGECYNSES575CKBTAVFUE2GFXK",
     currency: "USD",
-    coinmarketcap: process.env.COINMARKETCAP || null,
+    coinmarketcap: "df001212-260d-48cb-8785-069fb5d39ac8",
   },
 
   // if you want to deploy to a testnet, mainnet, or xdai, you will need to configure:
@@ -65,20 +72,33 @@ module.exports = {
   // Follow the directions, and uncomment the network you wish to deploy to.
 
   networks: {
+    hardhat: {
+      mining: {
+        // auto: false,
+        // interval: 1000,
+      },
+      accounts: {
+        mnemonic: mnemonic(),
+      },
+    },
     localhost: {
       url: "http://localhost:8545",
-      /*      
+      accounts: {
+        mnemonic: mnemonic(),
+      },
+      /*
         notice no mnemonic here? it will just use account 0 of the hardhat node to deploy
         (you can put in a mnemonic here to set the deployer locally)
-      
+
       */
     },
     rinkeby: {
-      url: "https://rinkeby.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad", // <---- YOUR INFURA ID! (or it won't work)
+      url: `https://rinkeby.infura.io/v3/${process.env.RINKEBY_INFURA_KEY}`,
       //    url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXX/eth/rinkeby", // <---- YOUR MORALIS ID! (not limited to infura)
       accounts: {
         mnemonic: mnemonic(),
       },
+      gasPrice: mainnetGwei * 1000000000,
     },
     kovan: {
       url: "https://kovan.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad", // <---- YOUR INFURA ID! (or it won't work)
@@ -88,7 +108,7 @@ module.exports = {
       },
     },
     mainnet: {
-      url: "https://mainnet.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad", // <---- YOUR INFURA ID! (or it won't work)
+      url: `https://mainnet.infura.io/v3/${process.env.RINKEBY_INFURA_KEY}`,
       //      url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXXXX/eth/mainnet", // <---- YOUR MORALIS ID! (not limited to infura)
       gasPrice: mainnetGwei * 1000000000,
       accounts: {
@@ -131,17 +151,21 @@ module.exports = {
       },
     },
     polygon: {
-      url: "https://polygon-rpc.com",
-      // url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXx/polygon/mainnet", // <---- YOUR MORALIS ID! (not limited to infura)
-      gasPrice: 3200000000,
+      // url: "https://polygon-rpc.com",
+      // <---- YOUR MORALIS ID! (not limited to infura)
+      // url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXX/polygon/mainnet",
+      url: `https://polygon-mainnet.infura.io/v3/${process.env.RINKEBY_INFURA_KEY}`,
+      gasPrice: 40000000000, // 40 gwei
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     mumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
-      // url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXX/polygon/mumbai", // <---- YOUR MORALIS ID! (not limited to infura)
-      gasPrice: 3200000000,
+      // url: "https://rpc-mumbai.maticvigil.com",
+      // <---- YOUR MORALIS ID! (not limited to infura)
+      // url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXX/polygon/mumbai",
+      url: `https://polygon-mumbai.infura.io/v3/${process.env.RINKEBY_INFURA_KEY}`,
+      gasPrice: 40000000000, // 40 gwei
       accounts: {
         mnemonic: mnemonic(),
       },
@@ -231,36 +255,29 @@ module.exports = {
       },
     },
     moonbeam: {
-      url: 'https://rpc.api.moonbeam.network',
+      url: "https://rpc.api.moonbeam.network",
       chainId: 1284,
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     moonriver: {
-      url: 'https://rpc.api.moonriver.moonbeam.network',
+      url: "https://rpc.api.moonriver.moonbeam.network",
       chainId: 1285,
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     moonbaseAlpha: {
-      url: 'https://rpc.api.moonbase.moonbeam.network',
+      url: "https://rpc.api.moonbase.moonbeam.network",
       chainId: 1287,
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     moonbeamDevNode: {
-      url: 'http://127.0.0.1:9933',
+      url: "http://127.0.0.1:9933",
       chainId: 1281,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
-    },
-    godwoken: {
-      url: 'https://godwoken-testnet-v1.ckbapp.dev',
-      chainId: 71401,
       accounts: {
         mnemonic: mnemonic(),
       },
@@ -269,23 +286,14 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.8.4",
+        version: "0.8.14",
         settings: {
           optimizer: {
             enabled: true,
             runs: 200,
           },
         },
-      },
-      {
-        version: "0.6.7",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
-          },
-        },
-      },
+      }
     ],
   },
   ovm: {
@@ -298,7 +306,10 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      mainnet: "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW",
+      mainnet: process.env.ETHER_SCAN_API_KEY_TOKEN,
+      rinkeby: process.env.ETHER_SCAN_API_KEY_TOKEN,
+      polygon: "NPZAWF7YDX24KHDUQ3RG6J6VWBB281IHIG", // got from polygonscan.com
+      polygonMumbai: "NPZAWF7YDX24KHDUQ3RG6J6VWBB281IHIG",
       // add other network's API key here
     },
   },

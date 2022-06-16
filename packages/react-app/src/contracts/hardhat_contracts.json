@@ -5,7 +5,7 @@
       "chainId": "31337",
       "contracts": {
         "YourContract": {
-          "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+          "address": "0x42e82cda993D26Cd9F1FfB0944d565549E46B289",
           "abi": [
             {
               "inputs": [],
@@ -59,6 +59,158 @@
               "name": "setPurpose",
               "outputs": [],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "stateMutability": "payable",
+              "type": "receive"
+            }
+          ]
+        },
+        "Showcase": {
+          "address": "0xa19b67C75D60feB4BfDB8AE97E1a9ee5E0295523",
+          "abi": [
+            {
+              "inputs": [],
+              "stateMutability": "payable",
+              "type": "constructor"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "promoter",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "nftContractAddress",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "nftTokenId",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "clickThruUrl",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "amount",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "date",
+                      "type": "string"
+                    }
+                  ],
+                  "indexed": false,
+                  "internalType": "struct Showcase.Promotion",
+                  "name": "promotion",
+                  "type": "tuple"
+                }
+              ],
+              "name": "PromotionAdded",
+              "type": "event"
+            },
+            {
+              "stateMutability": "payable",
+              "type": "fallback"
+            },
+            {
+              "inputs": [
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "promoter",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "nftContractAddress",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "nftTokenId",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "clickThruUrl",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "amount",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "date",
+                      "type": "string"
+                    }
+                  ],
+                  "internalType": "struct Showcase.Promotion",
+                  "name": "_promotion",
+                  "type": "tuple"
+                }
+              ],
+              "name": "addPromotion",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "name": "promotions",
+              "outputs": [
+                {
+                  "internalType": "address",
+                  "name": "promoter",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "nftContractAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "nftTokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "clickThruUrl",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "date",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {
