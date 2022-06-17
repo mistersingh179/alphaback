@@ -49,7 +49,7 @@ const PromotedText = props => {
 
 export default function Showcase(props) {
   const { readContracts } = props;
-  const { imageObj, promotionObj } = usePromotion(readContracts);
+  const { imageObj, promotionObj, inProgress } = usePromotion(readContracts);
   let imageUrl = "";
   if (imageObj && imageObj.media && imageObj.media[0]) {
     if (imageObj.media[0].gateway) {
@@ -60,6 +60,11 @@ export default function Showcase(props) {
   }
   console.log("*** imageObj: ", imageObj);
   console.log("*** imageUrl: ", imageUrl);
+
+  if(inProgress === true){
+    console.log("*** in Porgress right now. will show blank")
+    return ""
+  }
 
   return (
     <div style={{ padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
