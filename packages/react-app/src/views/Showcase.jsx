@@ -41,8 +41,8 @@ const PlaceHolderText = props => {
 const PromotedText = props => {
   return (
     <div>
-      PS: This is a <Text mark>promoted</Text> NFT. We received fees for it
-      which is distributed among the chrome extension install base.
+      PS: This is a <Text mark strong>promoted</Text> NFT. The promotion fees are
+      distributed among the chrome extension install base.
     </div>
   );
 };
@@ -50,7 +50,7 @@ const PromotedText = props => {
 export default function Showcase(props) {
   const { readContracts } = props;
   const { imageObj, promotionObj, inProgress } = usePromotion(readContracts);
-  let imageUrl = "";
+  let imageUrl = "https://ipfs.io/ipfs/QmRRPWG96cmgTn2qSzjwr2qvfNEuhunv6FNeMFGa9bx6mQ";
   if (imageObj && imageObj.media && imageObj.media[0]) {
     if (imageObj.media[0].gateway) {
       imageUrl = imageObj.media[0].gateway;
@@ -72,7 +72,7 @@ export default function Showcase(props) {
         <Card
           hoverable
           cover={imageUrl && <img src={imageUrl} />}
-          bordered={true}
+          bordered={false}
         >
           <Card.Meta
             title={promotionObj.title}
