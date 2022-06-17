@@ -5,48 +5,65 @@ import {
   Checkbox,
   Form,
   Input,
-  InputNumber,
-} from "antd";
+  InputNumber, Select,
+} from 'antd'
 import { useEffect, useState } from "react";
 import moment from "moment";
+import {ethers} from 'ethers';
 
 const Promotions = props => {
   const { address, writeContracts, tx } = props;
 
   const [form] = Form.useForm();
   window.form = form;
-
+  window.ethers = ethers;
   const onFinish = async values => {
-    console.log("Success:", values);
+    console.log("*** Success:", values);
     const {
       promoter,
       nftContractAddress,
       nftTokenId,
       clickThruUrl,
       promotionDate,
+      title,
+      subTitle,
+      networkName
     } = values;
-    const result = await tx(
-      writeContracts.Showcase.addPromotion([
-        promoter,
-        nftContractAddress,
-        nftTokenId,
-        clickThruUrl,
-        0,
-        promotionDate.format("YYYY-MM-DD"),
-      ]),
-    );
-    const receipt = await result.wait();
-    console.log(receipt);
+    try {
+      const result = tx(
+        writeContracts.Showcase.addPromotion([
+          promoter,
+          nftContractAddress,
+          nftTokenId,
+          "https://"+clickThruUrl,
+          0,
+          promotionDate.format("YYYY-MM-DD"),
+          title,
+          subTitle,
+          networkName
+        ]),
+      );
+      const receipt = await result;
+      console.log("*** receipt", receipt);
+    } catch (e) {
+      console.log("*** transaction cancelled: ", e);
+    }
   };
 
   const onFinishFailed = errorInfo => {
-    console.log("Failed:", errorInfo);
+    console.log("*** Failed:", errorInfo);
   };
 
   const initialValues = {
     remember: true,
     promoter: address,
+    // nftContractAddress: "0x05df72d911e52AB122f7d9955728BC96A718782C",
+    // nftTokenId: 12370,
+    // clickThruUrl: "google.com",
     promotionDate: moment(),
+    // title: "foo",
+    // subTitle: "foobar",
+    networkName: "mainnet"
   };
 
   const onDateChange = value => {
@@ -72,7 +89,7 @@ const Promotions = props => {
   useEffect(() => {
     console.log("*** resettig fields");
     form.resetFields();
-  }, [props.initialValues]);
+  }, [address]);
 
   return (
     <>
@@ -116,7 +133,27 @@ const Promotions = props => {
             { required: true, message: "Please enter the NFT Token Id!" },
           ]}
         >
-          <InputNumber style={{ width: "100%" }} />
+          <Input style={{ width: "100%" }} />
+        </Form.Item>
+
+        <Form.Item
+          label="Title"
+          name="title"
+          rules={[
+            { required: true, message: "Please enter Title" },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="SubTitle"
+          name="subTitle"
+          rules={[
+            { required: true, message: "Please enter Sub-Title" },
+          ]}
+        >
+          <Input />
         </Form.Item>
 
         <Form.Item
@@ -126,7 +163,20 @@ const Promotions = props => {
             { required: true, message: "Please enter the click-thru url!" },
           ]}
         >
-          <Input />
+          <Input addonBefore={'https://'} />
+        </Form.Item>
+
+        <Form.Item
+          label="Network Name"
+          name="networkName"
+          rules={[
+            { required: true, message: "Please select a network" },
+          ]}
+        >
+          <Select>
+            <Select.Option value="mainnet">mainnet</Select.Option>
+            <Select.Option value="polygon">polygon</Select.Option>
+          </Select>
         </Form.Item>
 
         {form.getFieldValue("promotionDate") && (

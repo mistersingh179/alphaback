@@ -15,6 +15,9 @@ contract Showcase {
         string clickThruUrl;
         uint amount;
         string date;
+        string title;
+        string subTitle;
+        string networkName;
     }
 
     mapping(string => Promotion) public promotions;
@@ -24,16 +27,20 @@ contract Showcase {
     }
 
     function addPromotion(Promotion memory _promotion) public {
-        console.log(_promotion.date);
+        console.log(_promotion.promoter);
         console.log(_promotion.nftContractAddress);
         console.log(_promotion.nftTokenId);
-        console.log(_promotion.promoter);
+        console.log(_promotion.clickThruUrl);
+        console.log(_promotion.amount);
+        console.log(_promotion.date);
+        console.log(_promotion.title);
+        console.log(_promotion.subTitle);
+        console.log(_promotion.networkName);
         emit PromotionAdded(_promotion);
         promotions[_promotion.date] = _promotion;
         console.log('added promotion');
         console.log(_promotion.date);
 //        console.log(promotions['_promotion.date']);
-
     }
 
     // to support receiving ETH by default

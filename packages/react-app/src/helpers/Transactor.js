@@ -44,8 +44,7 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
           }
         },
       };
-
-      notify = Notify(options);
+      // notify = Notify(options);
 
       let etherscanNetwork = "";
       if (network.name && network.chainId > 1) {
@@ -73,8 +72,6 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
           result = await signer.sendTransaction(tx);
         }
         if (DEBUG) console.log("RESULT:", result);
-        // console.log("Notify", notify);
-
         if (callback) {
           callbacks[result.hash] = callback;
         }

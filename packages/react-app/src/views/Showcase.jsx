@@ -1,66 +1,83 @@
-import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
+import {
+  Button,
+  Card,
+  DatePicker,
+  Divider,
+  Input,
+  Progress,
+  Skeleton,
+  Slider,
+  Spin,
+  Switch,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
+import { ethers } from "ethers";
 
 import { Address, Balance, Events } from "../components";
-import moment from 'moment'
+import moment from "moment";
+import { getImageUrl } from "../helpers";
+import Text from "antd/lib/typography/Text";
+import { usePromotion } from "../hooks";
 
-const NoNftBox = props => {
+const {
+  constants: { AddressZero },
+} = ethers;
+
+const PlaceHolderText = props => {
   return (
-    <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
-      No Promoted Nft here yet, but when we have a promoted NFT, it will show here.
-      <Divider />
-      Connect your wallet so that we can send you your share of the funds we get from the promoter for displaying their
-      NFT.
-      <Divider />
-      PS: We are in active search for someone who wants to pay & promote their NFT. If you know someone who wants to
-      promote their NFT, please encourage them to use our{" "}
-      <a href="https://alphaback.xyz/promote.html">self serve smart contract</a> to promote their NFT here.
-      <Divider />
-      WAGMI
+    <div>
+      PS: This is a placeholder NFT. We are actively looking for a promoter. If
+      you know one, please send them{" "}
+      <a href="https://alphaback.xyz/promote.html" target={"_blank"}>
+        this
+      </a>{" "}
+      way.
     </div>
   );
 };
 
-const YesNftBox = props => {
+const PromotedText = props => {
   return (
-    <div style={{ padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
-      <Card
-        cover={
-          <img
-            alt="example"
-            src="https://lh3.googleusercontent.com/ZreTUX9WgE5LIwD7pEBTj5uZc3k7nRtedG6OmrcpvNjDsM8Q9qr4tkRSAgrqoSvzoTHpj2aqM7ueGNw-AR1QEv38QTR3a4gu0SiBPQ=w600"
-          />
-        }
-        bordered={true}
-      >
-        <Card.Meta title="BAYC" description="https://opensea.io/BAYC" />
-        <Divider />
-        PS: This is a placeholder image. We are actively looking for a promoter. If you know one, please send them{" "}
-        <a href="https://alphaback.xyz/promote.html" target={"_blank"}>
-          this
-        </a>{" "}
-        way.
-      </Card>
+    <div>
+      PS: This is a <Text mark>promoted</Text> NFT. We received fees for it
+      which is distributed among the chrome extension install base.
     </div>
   );
 };
 
 export default function Showcase(props) {
   const { readContracts } = props;
-  useEffect(() => {
-    const getPromotion = async () => {
-      if (readContracts && readContracts.Showcase) {
-        const result = await readContracts.Showcase.promotions(moment().format("YYYY-MM-DD"));
-        console.log("*** result: ", result);
-      }
-    };
-    getPromotion();
-  }, [readContracts, readContracts && readContracts.Showcase]);
+  const { imageObj, promotionObj } = usePromotion(readContracts);
+  let imageUrl = "";
+  if (imageObj && imageObj.media && imageObj.media[0]) {
+    if (imageObj.media[0].gateway) {
+      imageUrl = imageObj.media[0].gateway;
+    } else if (imageObj.media[0].raw) {
+      imageUrl = imageObj.media[0].raw;
+    }
+  }
+  console.log("*** imageObj: ", imageObj);
+  console.log("*** imageUrl: ", imageUrl);
+
   return (
-    <div>
-      <YesNftBox />
+    <div style={{ padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
+      <a href={promotionObj.clickThruUrl}>
+        <Card
+          hoverable
+          cover={imageUrl && <img src={imageUrl} />}
+          bordered={true}
+        >
+          <Card.Meta
+            title={promotionObj.title}
+            description={promotionObj.subTitle}
+          />
+          <Divider />
+          {promotionObj.promoter == AddressZero && <PlaceHolderText />}
+          {promotionObj.promoter != AddressZero && <PromotedText />}
+        </Card>
+      </a>
     </div>
   );
 }

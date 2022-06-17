@@ -249,8 +249,8 @@ function App(props) {
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
       <Header
-        title={"AlphaBack"}
-        subTitle={"A browser extension that pays you to admire NFTs"}
+        title={""}
+        subTitle={""}
         link={"https://alphaback.xyz"}
       >
         {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
@@ -357,6 +357,16 @@ function App(props) {
                 this <Contract/> component will automatically parse your ABI
                 and give you a form to interact with it locally
             */}
+
+              <Contract
+                name="YourContract"
+                price={price}
+                signer={userSigner}
+                provider={localProvider}
+                address={address}
+                blockExplorer={blockExplorer}
+                contractConfig={contractConfig}
+              />
 
               <Contract
                 name="Showcase"
