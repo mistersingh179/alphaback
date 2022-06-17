@@ -44,6 +44,9 @@ describe("Showcase", () => {
       "http://alphaback.xyz",
       1,
       promotionDate,
+      "foo",
+      "foo bar",
+      "localhost",
     ];
     await showcase.connect(w1).addPromotion(promotion);
 
@@ -71,6 +74,9 @@ describe("Showcase", () => {
       "http://foo.com",
       1,
       TODAYS_DATE,
+      "foo",
+      "foo bar",
+      "localhost",
     ];
     await showcase.connect(w1).addPromotion(promotion);
 
