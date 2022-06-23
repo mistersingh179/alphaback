@@ -49,6 +49,7 @@ describe("Showcase", () => {
       "foo",
       "foo bar",
       "localhost",
+      "",
     ];
     await showcase.connect(w1).addPromotion(promotion);
 
@@ -71,6 +72,7 @@ describe("Showcase", () => {
         title: "Foo",
         subTitle: "Foobar",
         networkName: "mainnet",
+        imageUrl: "",
       };
     });
     for (let i = 0; i < promotions.length; i += 1) {
@@ -130,6 +132,7 @@ describe("Showcase", () => {
       "foo",
       "foo bar",
       "localhost",
+      ""
     ];
     await showcase.connect(w1).addPromotion(promotion);
 
