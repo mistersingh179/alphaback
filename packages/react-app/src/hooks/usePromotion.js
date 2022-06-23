@@ -21,15 +21,19 @@ const usePromotion = readContracts => {
             amount,
             promoter,
             networkName,
+            imageUrl,
           } = result;
           setPromotionObj(result);
           console.log("*** promotion object: ", result);
-
           const resultImageObj = await getImageUrl({
             nftContractAddress,
             nftTokenId,
             networkName,
           });
+          if(imageUrl && imageUrl.length > 5){
+            console.log("*** using imageUrl: ", imageUrl)
+            resultImageObj.media[0].gateway = imageUrl;
+          }
           console.log("*** resultImageObj: ", resultImageObj);
           setImageObj(resultImageObj);
         } catch (e) {

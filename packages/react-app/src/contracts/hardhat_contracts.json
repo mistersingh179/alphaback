@@ -336,7 +336,7 @@
           ]
         },
         "Showcase": {
-          "address": "0x558A218B91B1794D376cBe7dA090b5c88aed0EC4",
+          "address": "0x5dE794C39aE371e0a6c075C2bb163d20f5424998",
           "abi": [
             {
               "inputs": [],
@@ -391,6 +391,11 @@
                     {
                       "internalType": "string",
                       "name": "networkName",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "imageUrl",
                       "type": "string"
                     }
                   ],
@@ -454,6 +459,11 @@
                     {
                       "internalType": "string",
                       "name": "networkName",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "imageUrl",
                       "type": "string"
                     }
                   ],
@@ -523,6 +533,11 @@
                       "internalType": "string",
                       "name": "networkName",
                       "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "imageUrl",
+                      "type": "string"
                     }
                   ],
                   "internalType": "struct Showcase.Promotion[]",
@@ -586,6 +601,11 @@
                 {
                   "internalType": "string",
                   "name": "networkName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "imageUrl",
                   "type": "string"
                 }
               ],

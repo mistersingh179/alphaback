@@ -18,6 +18,7 @@ contract Showcase {
         string title;
         string subTitle;
         string networkName;
+        string imageUrl;
     }
 
     mapping(string => Promotion) public promotions;

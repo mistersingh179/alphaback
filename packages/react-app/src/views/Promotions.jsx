@@ -31,6 +31,7 @@ const Promotions = props => {
       title,
       subTitle,
       networkName,
+      imageUrl,
     } = values;
     try {
       const result = tx(
@@ -44,6 +45,7 @@ const Promotions = props => {
           title,
           subTitle,
           networkName,
+          imageUrl
         ]),
       );
       const receipt = await result;
@@ -63,11 +65,12 @@ const Promotions = props => {
     promoter: address,
     // nftContractAddress: "0x05df72d911e52AB122f7d9955728BC96A718782C",
     // nftTokenId: 12370,
-    // clickThruUrl: "google.com",
+    // clickThruUrl: "https://google.com",
     promotionDate: moment(),
     // title: "foo",
     // subTitle: "foobar",
     networkName: "mainnet",
+    imageUrl: "",
   };
 
   const onDateChange = value => {
@@ -215,7 +218,14 @@ const Promotions = props => {
             { required: true, message: "Please enter the click-thru url!" },
           ]}
         >
-          <Input addonBefore={"https://"} />
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="Image Url"
+          name="imageUrl"
+        >
+          <Input/>
         </Form.Item>
 
         <Form.Item
