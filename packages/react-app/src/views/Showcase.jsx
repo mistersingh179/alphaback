@@ -30,7 +30,7 @@ const PlaceHolderText = props => {
     <div>
       PS: This is a placeholder NFT. We are actively looking for a promoter. If
       you know one, please send them{" "}
-      <a href="https://alphaback.xyz/promote.html" target={"_blank"}>
+      <a href="https://app.alphaback.xyz/promotions" target={"_blank"}>
         this
       </a>{" "}
       way.
