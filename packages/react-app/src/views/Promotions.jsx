@@ -1,19 +1,22 @@
 import {
   Alert,
+  Badge,
   Button,
   Calendar,
   Checkbox,
   Form,
   Input,
-  InputNumber, Select,
-} from 'antd'
+  InputNumber,
+  Select,
+} from "antd";
 import { useEffect, useState } from "react";
 import moment from "moment";
-import {ethers} from 'ethers';
+import { ethers } from "ethers";
+const { constants } = ethers;
 
 const Promotions = props => {
-  const { address, writeContracts, tx } = props;
-
+  const { address, writeContracts, readContracts, tx } = props;
+  const [selectedDate, setSelectedDate] = useState(moment());
   const [form] = Form.useForm();
   window.form = form;
   window.ethers = ethers;
@@ -27,7 +30,7 @@ const Promotions = props => {
       promotionDate,
       title,
       subTitle,
-      networkName
+      networkName,
     } = values;
     try {
       const result = tx(
@@ -35,16 +38,17 @@ const Promotions = props => {
           promoter,
           nftContractAddress,
           nftTokenId,
-          "https://"+clickThruUrl,
+          "https://" + clickThruUrl,
           0,
           promotionDate.format("YYYY-MM-DD"),
           title,
           subTitle,
-          networkName
+          networkName,
         ]),
       );
       const receipt = await result;
       console.log("*** receipt", receipt);
+      getBookedDates();
     } catch (e) {
       console.log("*** transaction cancelled: ", e);
     }
@@ -63,13 +67,65 @@ const Promotions = props => {
     promotionDate: moment(),
     // title: "foo",
     // subTitle: "foobar",
-    networkName: "mainnet"
+    networkName: "mainnet",
   };
 
   const onDateChange = value => {
     console.log("*** changing date to: ", value);
     form.setFieldsValue({ promotionDate: value });
+    setSelectedDate(value);
   };
+
+  // const onDateSelect = value => {
+  //   console.log("*** selected date is: ", value);
+  //   form.setFieldsValue({ promotionDate: value });
+  // }
+
+  const onPanelChange = (date, mode) => {
+    console.log("*** panel changed: ", date, mode);
+  };
+
+  const dateCellRender = date => {
+    console.log("*** rendering for date: ", date.format("YYYY-MM-DD"));
+    const promo = dateToPromo[date.format("YYYY-MM-DD")];
+    if (promo && promo.promoter != constants.AddressZero) {
+      return (
+        <ul className="events">
+          <li>
+            <Badge status={"error"} text={"Booked"} />
+          </li>
+        </ul>
+      );
+    }
+  };
+
+  const getBookedDates = async () => {
+    if (readContracts && readContracts.Showcase && dateToPromo) {
+      console.log("*** selectedDate: ", selectedDate.format("YYYY-MM-DD"));
+      const m1 = selectedDate.clone();
+      m1.date(1);
+      const dates = [m1.format("YYYY-MM-DD")];
+      console.log("*** m1 is: ", m1.format("YYYY-MM-DD"));
+      [...Array(30)].forEach((item, idx) => {
+        dates.push(m1.add(1, "days").format("YYYY-MM-DD"));
+      });
+      // console.log("*** dates: ", dates);
+      console.log("*** get promotions: ");
+      const promos = await readContracts.Showcase.getMultiplePromotions(dates);
+      console.log("***got promotions: ", promos.length);
+      const dateToPromo = {};
+      dates.forEach((item, index) => {
+        dateToPromo[item] = promos[index];
+      });
+      // console.log("*** dateToPromo: ", dateToPromo);
+      setDateToPromo(dateToPromo);
+    }
+  };
+
+  const [dateToPromo, setDateToPromo] = useState({});
+  useEffect(() => {
+    getBookedDates();
+  }, [readContracts, selectedDate]);
 
   const layout = {
     labelCol: {
@@ -139,9 +195,7 @@ const Promotions = props => {
         <Form.Item
           label="Title"
           name="title"
-          rules={[
-            { required: true, message: "Please enter Title" },
-          ]}
+          rules={[{ required: true, message: "Please enter Title" }]}
         >
           <Input />
         </Form.Item>
@@ -149,9 +203,7 @@ const Promotions = props => {
         <Form.Item
           label="SubTitle"
           name="subTitle"
-          rules={[
-            { required: true, message: "Please enter Sub-Title" },
-          ]}
+          rules={[{ required: true, message: "Please enter Sub-Title" }]}
         >
           <Input />
         </Form.Item>
@@ -163,15 +215,13 @@ const Promotions = props => {
             { required: true, message: "Please enter the click-thru url!" },
           ]}
         >
-          <Input addonBefore={'https://'} />
+          <Input addonBefore={"https://"} />
         </Form.Item>
 
         <Form.Item
           label="Network Name"
           name="networkName"
-          rules={[
-            { required: true, message: "Please select a network" },
-          ]}
+          rules={[{ required: true, message: "Please select a network" }]}
         >
           <Select>
             <Select.Option value="mainnet">mainnet</Select.Option>
@@ -188,9 +238,13 @@ const Promotions = props => {
                   .format("YYYY-MM-DD")}`}
               />
               <Calendar
+                mode={"month"}
                 fullscreen={false}
                 onChange={onDateChange}
+                // onSelect={onDateSelect}
+                onPanelChange={onPanelChange}
                 defaultValue={form.getFieldValue("promotionDate")}
+                dateCellRender={dateCellRender}
               />
             </div>
           </Form.Item>

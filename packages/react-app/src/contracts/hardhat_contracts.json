@@ -336,7 +336,7 @@
           ]
         },
         "Showcase": {
-          "address": "0x4F0711395D8c799aB0089433a6fAF69e51B8D5D1",
+          "address": "0x558A218B91B1794D376cBe7dA090b5c88aed0EC4",
           "abi": [
             {
               "inputs": [],
@@ -465,6 +465,72 @@
               "name": "addPromotion",
               "outputs": [],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "string[]",
+                  "name": "dates",
+                  "type": "string[]"
+                }
+              ],
+              "name": "getMultiplePromotions",
+              "outputs": [
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "promoter",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "nftContractAddress",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "nftTokenId",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "clickThruUrl",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "amount",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "date",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "title",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "subTitle",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "networkName",
+                      "type": "string"
+                    }
+                  ],
+                  "internalType": "struct Showcase.Promotion[]",
+                  "name": "",
+                  "type": "tuple[]"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {
