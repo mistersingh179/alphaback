@@ -219,3 +219,9 @@ export const chainToName = {
   80001: "mumbai",
   137: "polygon",
 };
+
+export const placeholderWallets = {
+  "0x0000000000000000000000000000000000000000": true,
+  "0x378a29135fdFE323414189f682b061fc64aDC0B3": true,
+  "0x6B09B3C63B72fF54Bcb7322B607E304a13Fba72B": true
+}
