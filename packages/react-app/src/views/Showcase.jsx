@@ -44,9 +44,8 @@ const BottomText = props => {
     return (
       <div>
         PS: This is a placeholder NFT. We are actively looking for a promoter.
-        If you know one, please send them{" "}
-        <Link to={'/promotions'}>this</Link>{" "}
-        way.
+        If you know one,{" "}
+        <Link to={'/promotions'}> please send them this way. </Link>{" "}
       </div>
     );
   }
@@ -74,7 +73,7 @@ export default function Showcase(props) {
 
   return (
     <div style={{ padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
-      <a href={promotionObj.clickThruUrl}>
+      <a href={promotionObj.clickThruUrl ? promotionObj.clickThruUrl : "/promotions"}>
         <Card
           hoverable
           cover={imageUrl && <img src={imageUrl} />}

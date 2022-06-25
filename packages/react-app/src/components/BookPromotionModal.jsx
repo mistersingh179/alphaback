@@ -176,6 +176,12 @@ const BookPromotionModal = promos => {
           <Form.Item
             name="remember"
             valuePropName="checked"
+            rules={[{
+              required: true,
+              transform: value => (value || undefined),  // Those two lines
+              type: 'boolean',                           // Do the magic
+              message: 'Please agree the terms and conditions.',
+            }]}
             wrapperCol={{ offset: 8 }}
           >
             <Checkbox>
