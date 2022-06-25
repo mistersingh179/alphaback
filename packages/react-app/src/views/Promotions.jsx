@@ -45,7 +45,7 @@ const Promotions = props => {
           title,
           subTitle,
           networkName,
-          imageUrl
+          imageUrl,
         ]),
       );
       const receipt = await result;
@@ -91,25 +91,59 @@ const Promotions = props => {
   const dateCellRender = date => {
     console.log("*** rendering for date: ", date.format("YYYY-MM-DD"));
     const promo = dateToPromo[date.format("YYYY-MM-DD")];
-    if (promo && promo.promoter != constants.AddressZero) {
-      return (
-        <ul className="events">
+    let cost = dateToCost[date.format("YYYY-MM-DD")];
+    if (cost) {
+      cost = ethers.utils.formatEther(cost);
+    }
+    return (
+      <ul className="events">
+        {promo && promo.promoter != constants.AddressZero && (
           <li>
             <Badge status={"error"} text={"Booked"} />
           </li>
-        </ul>
-      );
+        )}
+        {cost && <li>
+          {/*<Badge count={<>${cost}</>} style={{ color: '#f5222d' }}/>*/}
+          <Badge status={"default"} text={"$" + cost} />
+        </li> }
+      </ul>
+    );
+  };
+
+  const getCostOfDates = async () => {
+    if (readContracts && readContracts.Showcase) {
+      const theDate = selectedDate.clone().subtract(1, 'months').date(1);
+      const theDates = [theDate.format("YYYY-MM-DD")];
+      [...Array(90)].forEach((item, idx) => {
+        theDates.push(theDate.add(1, "days").format("YYYY-MM-DD"));
+      });
+      const costs = await readContracts.Showcase.getMultipleDayCosts(theDates);
+      const defaultCost = await readContracts.Showcase.defaultCost();
+      const costsHash = {};
+      theDates.forEach((item, index) => {
+        if (costs[index] == 0) {
+          costsHash[item] = defaultCost;
+        } else {
+          costsHash[item] = costs[index];
+        }
+      });
+      setDateToCost(costsHash);
     }
   };
+
+  const [dateToCost, setDateToCost] = useState({});
+  useEffect(() => {
+    getCostOfDates();
+  }, [readContracts, selectedDate]);
 
   const getBookedDates = async () => {
     if (readContracts && readContracts.Showcase && dateToPromo) {
       console.log("*** selectedDate: ", selectedDate.format("YYYY-MM-DD"));
       const m1 = selectedDate.clone();
-      m1.date(1);
+      m1.subtract(1, 'months').date(1);
       const dates = [m1.format("YYYY-MM-DD")];
       console.log("*** m1 is: ", m1.format("YYYY-MM-DD"));
-      [...Array(30)].forEach((item, idx) => {
+      [...Array(90)].forEach((item, idx) => {
         dates.push(m1.add(1, "days").format("YYYY-MM-DD"));
       });
       // console.log("*** dates: ", dates);
@@ -221,11 +255,8 @@ const Promotions = props => {
           <Input />
         </Form.Item>
 
-        <Form.Item
-          label="Image Url"
-          name="imageUrl"
-        >
-          <Input/>
+        <Form.Item label="Image Url" name="imageUrl">
+          <Input />
         </Form.Item>
 
         <Form.Item

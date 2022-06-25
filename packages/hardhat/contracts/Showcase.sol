@@ -2,9 +2,17 @@ pragma solidity >=0.8.14;
 //SPDX-License-Identifier: MIT
 
 import "hardhat/console.sol";
-// import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Multicall.sol";
 
-contract Showcase {
+contract Showcase is Ownable, Multicall {
+
+    constructor(){
+//        transferOwnership(0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283);
+    }
+
+    uint public defaultCost = 99990000000000000000 ; // this is $99.99 for USDC
+    mapping(string => uint) public dayToCost;
 
     event PromotionAdded(Promotion promotion);
 
@@ -23,10 +31,6 @@ contract Showcase {
 
     mapping(string => Promotion) public promotions;
 
-    constructor() payable {
-        // what should we do on deploy??
-    }
-
     function getMultiplePromotions(string[] memory dates) public view returns(Promotion[] memory){
         uint numOfPromotions = dates.length;
         console.log("you asked for promotion count: ", numOfPromotions);
@@ -38,6 +42,19 @@ contract Showcase {
         return promos;
    }
 
+   function getMultipleDayCosts(string[] memory dates) public view returns(uint[] memory){
+       uint numOfDates = dates.length;
+       console.log("you asked for dates count: ", numOfDates);
+       uint[] memory costs = new uint[](numOfDates);
+       for(uint i=0;i<numOfDates;i++){
+           costs[i] = dayToCost[dates[i]];
+           console.log(costs[i]);
+       }
+       return costs;
+   }
+
+    // todo - charge USDC
+    // todo - free for owner & our wallets
     function addPromotion(Promotion memory _promotion) public {
 //        console.log(_promotion.promoter);
 //        console.log(_promotion.nftContractAddress);
@@ -58,6 +75,14 @@ contract Showcase {
     // to support receiving ETH by default
     receive() external payable {}
     fallback() external payable {}
+
+    function setDefaultCost(uint newCost) public onlyOwner {
+        defaultCost = newCost;
+    }
+
+    function setDayCost(string calldata date, uint newCost) public onlyOwner {
+        dayToCost[date] = newCost;
+    }
 
     // TODO
     // shutdown

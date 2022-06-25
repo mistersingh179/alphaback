@@ -29,7 +29,15 @@ import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import { Home, ExampleUI, Hints, Subgraph, Showcase, Promotions } from './views'
+import {
+  Home,
+  ExampleUI,
+  Hints,
+  Subgraph,
+  Showcase,
+  Promotions,
+  Promotions2,
+} from './views'
 import { useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
@@ -308,6 +316,18 @@ function App(props) {
         </Route>
         <Route exact path="/promotions">
           {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
+          <Promotions2
+            tx={tx}
+            writeContracts={writeContracts}
+            readContracts={readContracts}
+            address={address}
+            userSigner={userSigner}
+            mainnetProvider={mainnetProvider}
+            localProvider={localProvider}
+          />
+        </Route>
+        <Route exact path="/old-promotions">
+          {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
           <Promotions
             tx={tx}
             writeContracts={writeContracts}
@@ -325,6 +345,9 @@ function App(props) {
             </Menu.Item>
             <Menu.Item key="/showcase">
               <Link to="/showcase">Showcase</Link>
+            </Menu.Item>
+            <Menu.Item key="/old-promotions">
+              <Link to="/old-promotions">Old Promotions</Link>
             </Menu.Item>
             <Menu.Item key="/promotions">
               <Link to="/promotions">Promotions</Link>

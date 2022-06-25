@@ -21,6 +21,7 @@ import { getImageUrl } from "../helpers";
 import Text from "antd/lib/typography/Text";
 import { usePromotion } from "../hooks";
 import { placeholderWallets } from "../constants";
+import { Link } from 'react-router-dom'
 
 const {
   constants: { AddressZero },
@@ -44,9 +45,7 @@ const BottomText = props => {
       <div>
         PS: This is a placeholder NFT. We are actively looking for a promoter.
         If you know one, please send them{" "}
-        <a href="https://app.alphaback.xyz/promotions" target={"_blank"}>
-          this
-        </a>{" "}
+        <Link to={'/promotions'}>this</Link>{" "}
         way.
       </div>
     );
