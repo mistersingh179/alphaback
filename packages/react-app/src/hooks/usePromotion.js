@@ -11,7 +11,7 @@ const usePromotion = readContracts => {
       if (readContracts && readContracts.Showcase) {
         try {
           setInProgress(true);
-          const now = moment().format("YYYY-MM-DD");
+          const now = moment().utc().startOf('day').unix();
           console.log("*** reading promotion for: ", now);
           const result = await readContracts.Showcase.promotions(now);
           const {

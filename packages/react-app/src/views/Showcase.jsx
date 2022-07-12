@@ -19,9 +19,9 @@ import { Address, Balance, Events } from "../components";
 import moment from "moment";
 import { getImageUrl } from "../helpers";
 import Text from "antd/lib/typography/Text";
-import { usePromotion } from "../hooks";
+import { usePromotion, useMemberBalance } from "../hooks";
 import { placeholderWallets } from "../constants";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const {
   constants: { AddressZero },
@@ -45,15 +45,17 @@ const BottomText = props => {
       <div>
         PS: This is a placeholder NFT. We are actively looking for a promoter.
         If you know one,{" "}
-        <Link to={'/promotions'}> please send them this way. </Link>{" "}
+        <Link to={"/promotions"}> please send them this way. </Link>{" "}
       </div>
     );
   }
 };
 
 export default function Showcase(props) {
-  const { readContracts } = props;
+  const { readContracts, address } = props;
   const { imageObj, promotionObj, inProgress } = usePromotion(readContracts);
+  const memberBalance = useMemberBalance(readContracts, address);
+  console.log("*** reading memberBalance to be: ", memberBalance);
   let imageUrl =
     "https://ipfs.io/ipfs/QmRRPWG96cmgTn2qSzjwr2qvfNEuhunv6FNeMFGa9bx6mQ";
   if (imageObj && imageObj.media && imageObj.media[0]) {
@@ -73,7 +75,11 @@ export default function Showcase(props) {
 
   return (
     <div style={{ padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
-      <a href={promotionObj.clickThruUrl ? promotionObj.clickThruUrl : "/promotions"}>
+      <a
+        href={
+          promotionObj.clickThruUrl ? promotionObj.clickThruUrl : "/promotions"
+        }
+      >
         <Card
           hoverable
           cover={imageUrl && <img src={imageUrl} />}

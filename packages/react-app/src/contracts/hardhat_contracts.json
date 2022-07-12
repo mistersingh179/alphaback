@@ -354,8 +354,8 @@
     }
   },
   "31337": {
-    "localhost": {
-      "name": "localhost",
+    "hardhat": {
+      "name": "hardhat",
       "chainId": "31337",
       "contracts": {
         "YourContract": {
@@ -390,6 +390,165 @@
               "type": "fallback"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "string",
+                  "name": "_message",
+                  "type": "string"
+                }
+              ],
+              "name": "addMessage",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "name": "arr",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getMessages",
+              "outputs": [
+                {
+                  "internalType": "string[]",
+                  "name": "",
+                  "type": "string[]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "purpose",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "string",
+                  "name": "newPurpose",
+                  "type": "string"
+                }
+              ],
+              "name": "setPurpose",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "stateMutability": "payable",
+              "type": "receive"
+            }
+          ]
+        }
+      }
+    },
+    "localhost": {
+      "name": "localhost",
+      "chainId": "31337",
+      "contracts": {
+        "YourContract": {
+          "address": "0x8ccF7f875CC6A77bE3C353C87120E3ba87A4318D",
+          "abi": [
+            {
+              "inputs": [],
+              "stateMutability": "payable",
+              "type": "constructor"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "address",
+                  "name": "sender",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "string",
+                  "name": "purpose",
+                  "type": "string"
+                }
+              ],
+              "name": "SetPurpose",
+              "type": "event"
+            },
+            {
+              "stateMutability": "payable",
+              "type": "fallback"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "string",
+                  "name": "_message",
+                  "type": "string"
+                }
+              ],
+              "name": "addMessage",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "name": "arr",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getMessages",
+              "outputs": [
+                {
+                  "internalType": "string[]",
+                  "name": "",
+                  "type": "string[]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "purpose",
               "outputs": [
@@ -422,10 +581,16 @@
           ]
         },
         "Showcase": {
-          "address": "0x4c69E0e26FAC25E82d0e6aB482A5BE5155908ac3",
+          "address": "0xF6fE49c266c1C5D2676d3a32642fA96402A1A49a",
           "abi": [
             {
-              "inputs": [],
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_usdcAddress",
+                  "type": "address"
+                }
+              ],
               "stateMutability": "nonpayable",
               "type": "constructor"
             },
@@ -479,9 +644,9 @@
                       "type": "uint256"
                     },
                     {
-                      "internalType": "string",
+                      "internalType": "uint256",
                       "name": "date",
-                      "type": "string"
+                      "type": "uint256"
                     },
                     {
                       "internalType": "string",
@@ -502,6 +667,11 @@
                       "internalType": "string",
                       "name": "imageUrl",
                       "type": "string"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "memberCount",
+                      "type": "uint256"
                     }
                   ],
                   "indexed": false,
@@ -516,6 +686,24 @@
             {
               "stateMutability": "payable",
               "type": "fallback"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address[]",
+                  "name": "_members",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "_payoutDates",
+                  "type": "uint256[]"
+                }
+              ],
+              "name": "addMembers",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
             },
             {
               "inputs": [
@@ -547,9 +735,9 @@
                       "type": "uint256"
                     },
                     {
-                      "internalType": "string",
+                      "internalType": "uint256",
                       "name": "date",
-                      "type": "string"
+                      "type": "uint256"
                     },
                     {
                       "internalType": "string",
@@ -570,6 +758,11 @@
                       "internalType": "string",
                       "name": "imageUrl",
                       "type": "string"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "memberCount",
+                      "type": "uint256"
                     }
                   ],
                   "internalType": "struct Showcase.Promotion",
@@ -585,9 +778,28 @@
             {
               "inputs": [
                 {
-                  "internalType": "string",
+                  "internalType": "address[]",
+                  "name": "_addresses",
+                  "type": "address[]"
+                }
+              ],
+              "name": "areMembersPresent",
+              "outputs": [
+                {
+                  "internalType": "bool[]",
                   "name": "",
-                  "type": "string"
+                  "type": "bool[]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
                 }
               ],
               "name": "dayToCost",
@@ -615,11 +827,37 @@
               "type": "function"
             },
             {
+              "inputs": [],
+              "name": "doEmptyTransaction",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
               "inputs": [
                 {
-                  "internalType": "string[]",
+                  "internalType": "address[]",
+                  "name": "_addresses",
+                  "type": "address[]"
+                }
+              ],
+              "name": "getMembersLastPayoutDate",
+              "outputs": [
+                {
+                  "internalType": "uint256[]",
+                  "name": "",
+                  "type": "uint256[]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256[]",
                   "name": "dates",
-                  "type": "string[]"
+                  "type": "uint256[]"
                 }
               ],
               "name": "getMultipleDayCosts",
@@ -636,9 +874,9 @@
             {
               "inputs": [
                 {
-                  "internalType": "string[]",
+                  "internalType": "uint256[]",
                   "name": "dates",
-                  "type": "string[]"
+                  "type": "uint256[]"
                 }
               ],
               "name": "getMultiplePromotions",
@@ -671,9 +909,9 @@
                       "type": "uint256"
                     },
                     {
-                      "internalType": "string",
+                      "internalType": "uint256",
                       "name": "date",
-                      "type": "string"
+                      "type": "uint256"
                     },
                     {
                       "internalType": "string",
@@ -694,11 +932,108 @@
                       "internalType": "string",
                       "name": "imageUrl",
                       "type": "string"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "memberCount",
+                      "type": "uint256"
                     }
                   ],
                   "internalType": "struct Showcase.Promotion[]",
                   "name": "",
                   "type": "tuple[]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "installBasePercentage",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_index",
+                  "type": "uint256"
+                }
+              ],
+              "name": "memberAtIndex",
+              "outputs": [
+                {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_memberAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "promoDates",
+                  "type": "uint256[]"
+                }
+              ],
+              "name": "memberBalance",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256[]",
+                  "name": "promoDates",
+                  "type": "uint256[]"
+                }
+              ],
+              "name": "memberWithdrawBalance",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "membersCount",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
                 }
               ],
               "stateMutability": "view",
@@ -739,9 +1074,9 @@
             {
               "inputs": [
                 {
-                  "internalType": "string",
+                  "internalType": "uint256",
                   "name": "",
-                  "type": "string"
+                  "type": "uint256"
                 }
               ],
               "name": "promotions",
@@ -772,9 +1107,9 @@
                   "type": "uint256"
                 },
                 {
-                  "internalType": "string",
+                  "internalType": "uint256",
                   "name": "date",
-                  "type": "string"
+                  "type": "uint256"
                 },
                 {
                   "internalType": "string",
@@ -795,9 +1130,27 @@
                   "internalType": "string",
                   "name": "imageUrl",
                   "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "memberCount",
+                  "type": "uint256"
                 }
               ],
               "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address[]",
+                  "name": "_members",
+                  "type": "address[]"
+                }
+              ],
+              "name": "removeMembers",
+              "outputs": [],
+              "stateMutability": "nonpayable",
               "type": "function"
             },
             {
@@ -808,11 +1161,18 @@
               "type": "function"
             },
             {
+              "inputs": [],
+              "name": "selfDestruct",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
               "inputs": [
                 {
-                  "internalType": "string",
+                  "internalType": "uint256",
                   "name": "date",
-                  "type": "string"
+                  "type": "uint256"
                 },
                 {
                   "internalType": "uint256",
@@ -839,6 +1199,32 @@
               "type": "function"
             },
             {
+              "inputs": [],
+              "name": "startOfToday",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "timestamp",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
               "inputs": [
                 {
                   "internalType": "address",
@@ -847,6 +1233,115 @@
                 }
               ],
               "name": "transferOwnership",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "promoter",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "nftContractAddress",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "nftTokenId",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "clickThruUrl",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "amount",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "date",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "title",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "subTitle",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "networkName",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "imageUrl",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "memberCount",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct Showcase.Promotion",
+                  "name": "_promotion",
+                  "type": "tuple"
+                }
+              ],
+              "name": "updatePromotion",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "usdcContract",
+              "outputs": [
+                {
+                  "internalType": "contract IERC20",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                }
+              ],
+              "name": "withdraw",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                }
+              ],
+              "name": "withdrawEth",
               "outputs": [],
               "stateMutability": "nonpayable",
               "type": "function"

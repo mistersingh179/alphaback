@@ -12,10 +12,10 @@ const useDailyPrices = (readContracts, theDate) => {
         .clone()
         .subtract(1, "months")
         .date(1);
-      const theDates = [beginningOfPreviousMonth.format("YYYY-MM-DD")];
+      const theDates = [beginningOfPreviousMonth.unix()];
       [...Array(90)].forEach((val, idx, arr) => {
         theDates.push(
-          beginningOfPreviousMonth.add(1, "days").format("YYYY-MM-DD"),
+          beginningOfPreviousMonth.add(1, "days").unix(),
         );
       });
       const costs = await readContracts.Showcase.getMultipleDayCosts(theDates);

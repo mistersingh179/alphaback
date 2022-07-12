@@ -5,6 +5,7 @@ import { useThemeSwitcher } from "react-css-theme-switcher";
 import Address from "./Address";
 import Balance from "./Balance";
 import Wallet from "./Wallet";
+import { MemberBalance } from "./index";
 
 /** 
   ~ What it does? ~
@@ -53,14 +54,17 @@ export default function Account({
   logoutOfWeb3Modal,
   blockExplorer,
   isContract,
+  readContracts,
+  writeContracts,
+  tx,
 }) {
   const { currentTheme } = useThemeSwitcher();
 
   let accountButtonInfo;
   if (web3Modal?.cachedProvider) {
-    accountButtonInfo = { name: 'Logout', action: logoutOfWeb3Modal };
+    accountButtonInfo = { name: "Logout", action: logoutOfWeb3Modal };
   } else {
-    accountButtonInfo = { name: 'Connect', action: loadWeb3Modal };
+    accountButtonInfo = { name: "Connect", action: loadWeb3Modal };
   }
 
   const display = !minimized && (
@@ -73,6 +77,14 @@ export default function Account({
           fontSize={20}
         />
       )}
+      <MemberBalance
+        tx={tx}
+        writeContracts={writeContracts}
+        readContracts={readContracts}
+        address={address}
+        provider={localProvider}
+        fontSize={20}
+      />
       {/*<Balance address={address} provider={localProvider} price={price} size={20} />*/}
       {/*{!isContract && (*/}
       {/*  <Wallet*/}

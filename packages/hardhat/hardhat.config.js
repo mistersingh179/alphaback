@@ -29,7 +29,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 const defaultNetwork = "localhost";
 
-const mainnetGwei = 71;
+const mainnetGwei = 50;
 
 function mnemonic() {
   try {
@@ -79,6 +79,10 @@ module.exports = {
       },
       accounts: {
         mnemonic: mnemonic(),
+      },
+      forking: {
+        url: "https://eth-mainnet.g.alchemy.com/v2/v4MFelCyTw25PYOhxbj9tI_dompweHK-", // app name – alphaback_hardhat_testing
+        // blockNumber: 15052039,
       },
     },
     localhost: {
@@ -293,7 +297,7 @@ module.exports = {
             runs: 200,
           },
         },
-      }
+      },
     ],
   },
   ovm: {

@@ -63,7 +63,7 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
           result = await tx;
         } else {
           if (!tx.gasPrice) {
-            tx.gasPrice = gasPrice || ethers.utils.parseUnits("4.1", "gwei");
+            tx.gasPrice = gasPrice || ethers.utils.parseUnits("50", "gwei");
           }
           if (!tx.gasLimit) {
             tx.gasLimit = ethers.utils.hexlify(120000);
@@ -77,7 +77,7 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
         }
 
         // if it is a valid Notify.js network, use that, if not, just send a default notification
-        if (notify && [1, 3, 4, 5, 42, 100].indexOf(network.chainId) >= 0) {
+        if (notify && [1, 3, 4, 5, 42, 100, 137].indexOf(network.chainId) >= 0) {
           const { emitter } = notify.hash(result.hash);
           emitter.on("all", transaction => {
             return {

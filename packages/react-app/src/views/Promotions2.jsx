@@ -12,7 +12,7 @@ const {
 
 const Promotions2 = props => {
   const { readContracts, writeContracts, address, tx } = props;
-  const [selectedDate, setSelectedDate] = useState(moment());
+  const [selectedDate, setSelectedDate] = useState(moment().utc().startOf("day"));
   const dailyPricesHash = useDailyPrices(readContracts, selectedDate);
   const dailyPromosHash = useDailyPromos(readContracts, selectedDate);
   const [showModal, setShowModal] = useState(false);
@@ -42,17 +42,17 @@ const Promotions2 = props => {
   };
 
   const onDateChange = date => {
-    setSelectedDate(date);
+    setSelectedDate(date.utc().startOf("day"));
     setShowModal(true);
   };
 
   const dateCellRender = date => {
-    const formattedDate = date.format("YYYY-MM-DD");
-    let cost = dailyPricesHash[date.format(formattedDate)];
+    const dateInUnixSeconds = date.utc().startOf('day').unix();
+    let cost = dailyPricesHash[dateInUnixSeconds];
     if (cost) {
-      cost = ethers.utils.formatEther(cost);
+      cost = ethers.utils.formatUnits(cost, 6);
     }
-    let promo = dailyPromosHash[formattedDate];
+    let promo = dailyPromosHash[dateInUnixSeconds];
     let promoter;
     if (promo) {
       promoter = promo.promoter;
@@ -83,8 +83,10 @@ const Promotions2 = props => {
     );
   };
 
+  const now = moment().utc().format();
   return (
     <>
+      Now: {now}
       <Calendar
         style={{ padding: "0 50px" }}
         mode={"month"}

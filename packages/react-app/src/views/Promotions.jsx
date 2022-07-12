@@ -93,7 +93,7 @@ const Promotions = props => {
     const promo = dateToPromo[date.format("YYYY-MM-DD")];
     let cost = dateToCost[date.format("YYYY-MM-DD")];
     if (cost) {
-      cost = ethers.utils.formatEther(cost);
+      cost = ethers.utils.formatUnits(cost, 6);
     }
     return (
       <ul className="events">
@@ -112,10 +112,10 @@ const Promotions = props => {
 
   const getCostOfDates = async () => {
     if (readContracts && readContracts.Showcase) {
-      const theDate = selectedDate.clone().subtract(1, 'months').date(1);
-      const theDates = [theDate.format("YYYY-MM-DD")];
+      const theDate = selectedDate.clone().utc().subtract(1, 'months').date(1);
+      const theDates = [theDate.unix()];
       [...Array(90)].forEach((item, idx) => {
-        theDates.push(theDate.add(1, "days").format("YYYY-MM-DD"));
+        theDates.push(theDate.add(1, "days").unix());
       });
       const costs = await readContracts.Showcase.getMultipleDayCosts(theDates);
       const defaultCost = await readContracts.Showcase.defaultCost();

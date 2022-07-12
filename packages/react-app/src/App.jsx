@@ -31,16 +31,21 @@ import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
 import {
   Home,
+  Admin,
   ExampleUI,
   Hints,
   Subgraph,
   Showcase,
   Promotions,
   Promotions2,
-} from './views'
+} from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
+window.ethers = ethers;
+
+const moment = require("moment");
+window.moment = moment;
 /*
     Welcome to 🏗 scaffold-eth !
 
@@ -96,7 +101,9 @@ function App(props) {
 
   // load all your providers
   const localProvider = useStaticJsonRPC([
-    process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : targetNetwork.rpcUrl,
+    process.env.REACT_APP_PROVIDER
+      ? process.env.REACT_APP_PROVIDER
+      : targetNetwork.rpcUrl,
   ]);
   const mainnetProvider = useStaticJsonRPC(providers);
 
@@ -107,7 +114,11 @@ function App(props) {
 
   const logoutOfWeb3Modal = async () => {
     await web3Modal.clearCachedProvider();
-    if (injectedProvider && injectedProvider.provider && typeof injectedProvider.provider.disconnect == "function") {
+    if (
+      injectedProvider &&
+      injectedProvider.provider &&
+      typeof injectedProvider.provider.disconnect == "function"
+    ) {
       await injectedProvider.provider.disconnect();
     }
     setTimeout(() => {
@@ -121,7 +132,11 @@ function App(props) {
   /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
   const gasPrice = useGasPrice(targetNetwork, "fast");
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
-  const userProviderAndSigner = useUserProviderAndSigner(injectedProvider, localProvider, USE_BURNER_WALLET);
+  const userProviderAndSigner = useUserProviderAndSigner(
+    injectedProvider,
+    localProvider,
+    USE_BURNER_WALLET,
+  );
   const userSigner = userProviderAndSigner.signer;
 
   useEffect(() => {
@@ -135,9 +150,13 @@ function App(props) {
   }, [userSigner]);
 
   // You can warn the user if you would like them to be on a specific network
-  const localChainId = localProvider && localProvider._network && localProvider._network.chainId;
+  const localChainId =
+    localProvider && localProvider._network && localProvider._network.chainId;
   const selectedChainId =
-    userSigner && userSigner.provider && userSigner.provider._network && userSigner.provider._network.chainId;
+    userSigner &&
+    userSigner.provider &&
+    userSigner.provider._network &&
+    userSigner.provider._network.chainId;
 
   // For more hooks, check out 🔗eth-hooks at: https://www.npmjs.com/package/eth-hooks
 
@@ -152,13 +171,20 @@ function App(props) {
 
   // const contractConfig = useContractConfig();
 
-  const contractConfig = { deployedContracts: deployedContracts || {}, externalContracts: externalContracts || {} };
+  const contractConfig = {
+    deployedContracts: deployedContracts || {},
+    externalContracts: externalContracts || {},
+  };
 
   // Load in your local 📝 contract and read a value from it:
   const readContracts = useContractLoader(localProvider, contractConfig);
 
   // If you want to make 🔐 write transactions to your contracts, use the userSigner:
-  const writeContracts = useContractLoader(userSigner, contractConfig, localChainId);
+  const writeContracts = useContractLoader(
+    userSigner,
+    contractConfig,
+    localChainId,
+  );
 
   // EXTERNAL CONTRACT EXAMPLE:
   //
@@ -167,13 +193,18 @@ function App(props) {
 
   // If you want to call a function on a new block
   useOnBlock(mainnetProvider, () => {
-    console.log(`⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`);
+    console.log(
+      `⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`,
+    );
   });
 
   // Then read your DAI balance like:
-  const myMainnetDAIBalance = useContractReader(mainnetContracts, "DAI", "balanceOf", [
-    "0x34aA3F359A9D614239015126635CE7732c18fDF3",
-  ]);
+  const myMainnetDAIBalance = useContractReader(
+    mainnetContracts,
+    "DAI",
+    "balanceOf",
+    ["0x34aA3F359A9D614239015126635CE7732c18fDF3"],
+  );
 
   // keep track of a variable from the contract in the local React state:
   const purpose = useContractReader(readContracts, "YourContract", "purpose");
@@ -198,13 +229,23 @@ function App(props) {
       writeContracts &&
       mainnetContracts
     ) {
-      console.log("_____________________________________ 🏗 scaffold-eth _____________________________________");
+      console.log(
+        "_____________________________________ 🏗 scaffold-eth _____________________________________",
+      );
       console.log("🌎 mainnetProvider", mainnetProvider);
       console.log("🏠 localChainId", localChainId);
       console.log("👩‍💼 selected address:", address);
       console.log("🕵🏻‍♂️ selectedChainId:", selectedChainId);
-      console.log("💵 yourLocalBalance", yourLocalBalance ? ethers.utils.formatEther(yourLocalBalance) : "...");
-      console.log("💵 yourMainnetBalance", yourMainnetBalance ? ethers.utils.formatEther(yourMainnetBalance) : "...");
+      console.log(
+        "💵 yourLocalBalance",
+        yourLocalBalance ? ethers.utils.formatEther(yourLocalBalance) : "...",
+      );
+      console.log(
+        "💵 yourMainnetBalance",
+        yourMainnetBalance
+          ? ethers.utils.formatEther(yourMainnetBalance)
+          : "...",
+      );
       console.log("📝 readContracts", readContracts);
       console.log("🌍 DAI contract on mainnet:", mainnetContracts);
       console.log("💵 yourMainnetDAIBalance", myMainnetDAIBalance);
@@ -251,16 +292,15 @@ function App(props) {
     }
   }, [loadWeb3Modal]);
 
-  const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name.indexOf("local") !== -1;
+  const faucetAvailable =
+    localProvider &&
+    localProvider.connection &&
+    targetNetwork.name.indexOf("local") !== -1;
 
   return (
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
-      <Header
-        title={""}
-        subTitle={""}
-        link={"https://alphaback.xyz"}
-      >
+      <Header title={""} subTitle={""} link={"https://alphaback.xyz"}>
         {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
         <div>
           <div>
@@ -275,6 +315,9 @@ function App(props) {
             )}
             <Account
               useBurner={USE_BURNER_WALLET}
+              tx={tx}
+              writeContracts={writeContracts}
+              readContracts={readContracts}
               address={address}
               localProvider={localProvider}
               userSigner={userSigner}
@@ -291,15 +334,15 @@ function App(props) {
       {/*{yourLocalBalance.lte(ethers.BigNumber.from("0")) && (*/}
       {/*  <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />*/}
       {/*)}*/}
-      <NetworkDisplay
-        address={address}
-        NETWORKCHECK={NETWORKCHECK}
-        localChainId={localChainId}
-        selectedChainId={selectedChainId}
-        targetNetwork={targetNetwork}
-        logoutOfWeb3Modal={logoutOfWeb3Modal}
-        USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-      />
+      {/*<NetworkDisplay*/}
+      {/*  address={address}*/}
+      {/*  NETWORKCHECK={NETWORKCHECK}*/}
+      {/*  localChainId={localChainId}*/}
+      {/*  selectedChainId={selectedChainId}*/}
+      {/*  targetNetwork={targetNetwork}*/}
+      {/*  logoutOfWeb3Modal={logoutOfWeb3Modal}*/}
+      {/*  USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}*/}
+      {/*/>*/}
       <Switch>
         <Route exact path="/">
           <Redirect to={"showcase"} />
@@ -339,9 +382,16 @@ function App(props) {
           />
         </Route>
         <Route>
-          <Menu style={{ textAlign: "center", marginTop: 20 }} selectedKeys={[location.pathname]} mode="horizontal">
+          <Menu
+            style={{ textAlign: "center", marginTop: 20 }}
+            selectedKeys={[location.pathname]}
+            mode="horizontal"
+          >
             <Menu.Item key="/home">
               <Link to="/home">App Home</Link>
+            </Menu.Item>
+            <Menu.Item key="/admin">
+              <Link to="/admin">Admin</Link>
             </Menu.Item>
             <Menu.Item key="/showcase">
               <Link to="/showcase">Showcase</Link>
@@ -370,9 +420,28 @@ function App(props) {
           </Menu>
 
           <Switch>
+            <Route exact path="/admin">
+              <Admin
+                yourLocalBalance={yourLocalBalance}
+                readContracts={readContracts}
+                writeContracts={writeContracts}
+                localProvider={localProvider}
+                address={address}
+                tx={tx}
+                userSigner={userSigner}
+              />
+            </Route>
             <Route exact path="/home">
               {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
-              <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
+              <Home
+                yourLocalBalance={yourLocalBalance}
+                readContracts={readContracts}
+                writeContracts={writeContracts}
+                localProvider={localProvider}
+                address={address}
+                tx={tx}
+                userSigner={userSigner}
+              />
             </Route>
             <Route exact path="/debug">
               {/*
@@ -381,15 +450,15 @@ function App(props) {
                 and give you a form to interact with it locally
             */}
 
-              <Contract
-                name="YourContract"
-                price={price}
-                signer={userSigner}
-                provider={localProvider}
-                address={address}
-                blockExplorer={blockExplorer}
-                contractConfig={contractConfig}
-              />
+              {/*<Contract*/}
+              {/*  name="YourContract"*/}
+              {/*  price={price}*/}
+              {/*  signer={userSigner}*/}
+              {/*  provider={localProvider}*/}
+              {/*  address={address}*/}
+              {/*  blockExplorer={blockExplorer}*/}
+              {/*  contractConfig={contractConfig}*/}
+              {/*/>*/}
 
               <Contract
                 name="Showcase"
@@ -400,6 +469,7 @@ function App(props) {
                 blockExplorer={blockExplorer}
                 contractConfig={contractConfig}
               />
+              <br/><br/><br/><br/><br/>
             </Route>
             <Route path="/hints">
               <Hints
@@ -426,7 +496,11 @@ function App(props) {
             <Route path="/mainnetdai">
               <Contract
                 name="DAI"
-                customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.DAI}
+                customContract={
+                  mainnetContracts &&
+                  mainnetContracts.contracts &&
+                  mainnetContracts.contracts.DAI
+                }
                 signer={userSigner}
                 provider={mainnetProvider}
                 address={address}
@@ -458,7 +532,15 @@ function App(props) {
           <ThemeSwitch />
 
           {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
-          <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
+          <div
+            style={{
+              position: "fixed",
+              textAlign: "left",
+              left: 0,
+              bottom: 20,
+              padding: 10,
+            }}
+          >
             <Row align="middle" gutter={[4, 4]}>
               <Col span={8}>
                 <Ramp price={price} address={address} networks={NETWORKS} />
@@ -475,7 +557,11 @@ function App(props) {
                   size="large"
                   shape="round"
                 >
-                  <span style={{ marginRight: 8 }} role="img" aria-label="support">
+                  <span
+                    style={{ marginRight: 8 }}
+                    role="img"
+                    aria-label="support"
+                  >
                     💬
                   </span>
                   Support
@@ -486,7 +572,11 @@ function App(props) {
             <Row align="middle" gutter={[4, 4]}>
               <Col span={24}>
                 {faucetAvailable ? (
-                  <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider} />
+                  <Faucet
+                    localProvider={localProvider}
+                    price={price}
+                    ensProvider={mainnetProvider}
+                  />
                 ) : (
                   ""
                 )}
