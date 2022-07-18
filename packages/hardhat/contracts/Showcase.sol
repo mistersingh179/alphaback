@@ -22,6 +22,7 @@ contract Showcase is Ownable, Multicall {
     IERC20 public usdcContract;
     mapping(uint => Promotion) public promotions;
     mapping(uint => uint) public dayToCost;
+    uint[] public promotionDates;
 
     uint public defaultCost = 99_990_000 ; // this is $99.99 for USDC
     uint constant public installBasePercentage = 70; // 70%
@@ -83,7 +84,9 @@ contract Showcase is Ownable, Multicall {
         existingPromo.imageUrl = _promotion.imageUrl;
     }
 
-   function addPromotion(Promotion memory _promotion) public {
+    function addPromotion(Promotion memory _promotion) public {
+        require(promotions[_promotion.date].promoter == address(0), "promotion is not available");
+
         uint amount = defaultCost;
         if(dayToCost[_promotion.date] > 0){
             amount = dayToCost[_promotion.date];
@@ -102,6 +105,7 @@ contract Showcase is Ownable, Multicall {
         _promotion.memberCount = membersWithPayoutDate.length();
        _promotion.promoter = msg.sender;
         promotions[_promotion.date] = _promotion;
+        promotionDates.push(_promotion.date);
     }
 
     function withdraw(uint amount) public onlyOwner{
@@ -144,12 +148,33 @@ contract Showcase is Ownable, Multicall {
             membersWithPayoutDate.set(_members[i], _payoutDates[i]);
             console.log("done");
         }
+        resetMemberCountOfAllFuturePromotions();
+    }
+
+    function resetMemberCountOfAllFuturePromotions() private{
+        uint startOfTomorrow = block.timestamp - (block.timestamp % (24*60*60)) + (24*60*60);
+        console.log("startOfTomorrow: ", startOfTomorrow);
+        uint currentMemberCount = membersCount();
+        console.log(currentMemberCount);
+        if(promotionDates.length >= 1){
+            console.log(promotionDates.length);
+            for(uint i=promotionDates.length;i>0;i--){
+                if(promotions[promotionDates[i-1]].date >= startOfTomorrow){
+                    if(promotions[promotionDates[i-1]].memberCount != currentMemberCount){
+                        promotions[promotionDates[i-1]].memberCount = currentMemberCount;
+                    }
+                }else{
+                    break;
+                }
+            }
+        }
     }
 
     function removeMembers(address[] memory _members) public onlyOwner(){
         for(uint i=0;i<_members.length;i++){
             membersWithPayoutDate.remove(_members[i]);
         }
+        resetMemberCountOfAllFuturePromotions();
     }
 
     function memberBalance(address _memberAddress, uint[] memory promoDates) public view returns(uint, uint){

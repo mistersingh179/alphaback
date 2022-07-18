@@ -21,6 +21,12 @@ const Admin = props => {
     yourLocalBalance,
   } = props;
 
+  const blockTimestamp = useContractReader(
+    readContracts,
+    "Showcase",
+    "timestamp",
+  );
+
   const memberCount = useContractReader(
     readContracts,
     "Showcase",
@@ -59,7 +65,7 @@ const Admin = props => {
   const memberUsdcBalance = useUsdcBalance(readContracts, address, txHash);
   const getMoreUsdc = async () => {
     const usdcContractAddress = readContracts.USDC.address;
-    const usdcWhaleAddress = "0x0D2703ac846c26d5B6Bbddf1FD6027204F409785";
+    const usdcWhaleAddress = "0x72a53cdbbcc1b9efa39c834a540550e23463aacb";
     await userSigner.sendTransaction({
       to: usdcWhaleAddress,
       value: ethers.utils.parseUnits(".01", 18),
@@ -138,13 +144,20 @@ const Admin = props => {
     );
   };
   const formattedInputtedDayCost = () => {
-    try{
+    try {
       return ethers.utils.formatUnits(inputtedDayCost, 6);
-    }catch(e){
-      return ""
+    } catch (e) {
+      return "";
     }
-  }
+  };
+  const [moveForwardDate, setMoveForwardDate] = useState(moment());
 
+  const moveTimeForward = async () => {
+    await localProvider.send("evm_setNextBlockTimestamp", [
+      moveForwardDate.utc().unix(),
+    ]);
+    await localProvider.send("evm_mine");
+  };
   return (
     <div style={{ marginTop: 20 }}>
       <div>
@@ -227,7 +240,13 @@ const Admin = props => {
             Set Day Cost for {inputtedDate.utc().startOf("day").format()} to{" "}
             {formattedInputtedDayCost()}
             <br />
-            <DatePicker onChange={val => setInputtedDate(val)} />
+            <DatePicker
+              onChange={val => {
+                if (val) {
+                  setInputtedDate(val);
+                }
+              }}
+            />
             <InputNumber
               value={inputtedDayCost}
               onChange={val => setInputtedDayCost(val)}
@@ -235,6 +254,25 @@ const Admin = props => {
             />{" "}
             No decimals please
             <Button onClick={updateDayCost}>Update Daily Cost </Button>
+          </Col>
+          <Col span={8}></Col>
+
+          <Col span={8} offset={8}>
+            Block Timestamp: {blockTimestamp && blockTimestamp.toString()}{" "}
+            <br />
+            Block Timestamp Formatted:{" "}
+            {blockTimestamp &&
+              moment.unix(blockTimestamp.toString()).utc().format()}
+            <br />
+            <DatePicker
+              showTime={true}
+              onChange={val => {
+                if (val) {
+                  setMoveForwardDate(val);
+                }
+              }}
+            />{" "}
+            <Button onClick={moveTimeForward}>Move Time Forward </Button>
           </Col>
           <Col span={8}></Col>
         </Row>
