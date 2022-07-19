@@ -38,7 +38,7 @@ const Admin = props => {
   const addMembers = async () => {
     const addresses = addressList.split("\n");
     const dates = addresses.map(() =>
-      BigNumber.from(moment().utc().startOf("day").subtract(1, "days").unix()),
+      BigNumber.from(moment().utc().startOf("day").unix()),
     );
     console.log("going to add: ", addresses, dates);
     try {
