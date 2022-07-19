@@ -22,7 +22,7 @@ import Text from "antd/lib/typography/Text";
 import { usePromotion, useMemberBalance } from "../hooks";
 import { placeholderWallets } from "../constants";
 import { Link } from "react-router-dom";
-import baycImage from '../images/bayc1.jpg';
+import baycImage from "../images/bayc1.jpg";
 
 const {
   constants: { AddressZero },
@@ -56,7 +56,16 @@ export default function Showcase(props) {
   const { readContracts, address } = props;
   const { imageObj, promotionObj, inProgress } = usePromotion(readContracts);
   const memberBalance = useMemberBalance(readContracts, address);
-  console.log("*** reading memberBalance to be: ", memberBalance);
+
+  useEffect(() => {
+    if (window && window.dataLayer && address) {
+      // console.log("*** going to push: ", window.dataLayer, address);
+      window.dataLayer.push({
+        user_id: address,
+      });
+    }
+  }, [window && window.dataLayer, address]);
+
   let imageUrl = baycImage;
   if (imageObj && imageObj.media && imageObj.media[0]) {
     if (imageObj.media[0].gateway) {

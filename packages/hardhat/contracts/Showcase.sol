@@ -45,7 +45,6 @@ contract Showcase is Ownable, Multicall {
 
     constructor(address _usdcAddress){
         usdcContract = IERC20(_usdcAddress);
-//        transferOwnership(0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283);
     }
 
     function getMultiplePromotions(uint[] memory dates) public view returns(Promotion[] memory){
@@ -259,10 +258,6 @@ contract Showcase is Ownable, Multicall {
     }
 
     function doEmptyTransaction() external { }
-
-//    function getMembers() public view returns (address[] memory){
-//        return members.values();
-//    }
 
     function selfDestruct() onlyOwner external {
         try usdcContract.balanceOf(address(this)) returns (uint bal) {
