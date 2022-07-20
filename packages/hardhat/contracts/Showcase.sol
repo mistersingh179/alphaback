@@ -14,6 +14,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Multicall.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Showcase is Ownable, Multicall {
     using EnumerableMap for EnumerableMap.AddressToUintMap;
@@ -22,6 +23,7 @@ contract Showcase is Ownable, Multicall {
     IERC20 public usdcContract;
     mapping(uint => Promotion) public promotions;
     mapping(uint => uint) public dayToCost;
+    uint[] public promotionDates;
 
     uint public defaultCost = 99_990_000 ; // this is $99.99 for USDC
     uint constant public installBasePercentage = 70; // 70%
@@ -44,7 +46,6 @@ contract Showcase is Ownable, Multicall {
 
     constructor(address _usdcAddress){
         usdcContract = IERC20(_usdcAddress);
-//        transferOwnership(0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283);
     }
 
     function getMultiplePromotions(uint[] memory dates) public view returns(Promotion[] memory){
@@ -83,7 +84,9 @@ contract Showcase is Ownable, Multicall {
         existingPromo.imageUrl = _promotion.imageUrl;
     }
 
-   function addPromotion(Promotion memory _promotion) public {
+    function addPromotion(Promotion memory _promotion) public {
+        require(promotions[_promotion.date].promoter == address(0), "promotion is not available");
+
         uint amount = defaultCost;
         if(dayToCost[_promotion.date] > 0){
             amount = dayToCost[_promotion.date];
@@ -102,6 +105,7 @@ contract Showcase is Ownable, Multicall {
         _promotion.memberCount = membersWithPayoutDate.length();
        _promotion.promoter = msg.sender;
         promotions[_promotion.date] = _promotion;
+        promotionDates.push(_promotion.date);
     }
 
     function withdraw(uint amount) public onlyOwner{
@@ -144,12 +148,70 @@ contract Showcase is Ownable, Multicall {
             membersWithPayoutDate.set(_members[i], _payoutDates[i]);
             console.log("done");
         }
+        resetMemberCountOfAllFuturePromotions();
+    }
+
+    function resetMemberCountOfAllFuturePromotions() private{
+        uint startOfTomorrow = block.timestamp - (block.timestamp % (24*60*60)) + (24*60*60);
+        console.log("startOfTomorrow: ", startOfTomorrow);
+        uint currentMemberCount = membersCount();
+        console.log("current members count:");
+        console.log(currentMemberCount);
+        console.log("num of promotions:");
+        console.log(promotionDates.length);
+        if(promotionDates.length >= 1){
+            for(uint i=0;i<promotionDates.length;i++){
+                console.log("inspecting promo");
+                console.log(promotions[promotionDates[i]].date);
+                if(promotions[promotionDates[i]].date >= startOfTomorrow){
+                    console.log("this promo is in future");
+                    if(promotions[promotionDates[i]].memberCount != currentMemberCount){
+                        console.log("promo has wrong member count. fixing it");
+                        promotions[promotionDates[i]].memberCount = currentMemberCount;
+                    }else{
+                        console.log("promo has correct count. nothing to fix");
+                    }
+                }else{
+                    console.log("skipping promo as it is not in the future");
+                }
+            }
+        }
     }
 
     function removeMembers(address[] memory _members) public onlyOwner(){
         for(uint i=0;i<_members.length;i++){
             membersWithPayoutDate.remove(_members[i]);
         }
+        resetMemberCountOfAllFuturePromotions();
+    }
+
+    function memberBalanceHistory(address _memberAddress, uint[] memory promoDates) public view returns(string[] memory){
+        uint lastPayoutDate = membersWithPayoutDate.get(_memberAddress);
+        string[] memory messages = new string[](promoDates.length);
+        for(uint i=0;i<promoDates.length;i++){
+            Promotion memory tempPromo = promotions[promoDates[i]];
+            console.log(tempPromo.date, tempPromo.amount);
+
+            if(tempPromo.amount == 0){
+                messages[i] = "skipping promo date as no money there";
+                continue;
+            }
+            if(tempPromo.date <= lastPayoutDate){
+                messages[i] = "skipping promo date as before or equal to lastPayoutDate";
+                continue;
+            }
+            if(tempPromo.date > block.timestamp) {
+                messages[i] = "skipping promo date as after now";
+                continue;
+            }
+            if(tempPromo.memberCount == 0){
+                messages[i] = "skipping promo as it has no members";
+                continue;
+            }
+            uint amt = ((tempPromo.amount * installBasePercentage) / 100) / tempPromo.memberCount;
+            messages[i] = Strings.toString(amt);
+        }
+        return messages;
     }
 
     function memberBalance(address _memberAddress, uint[] memory promoDates) public view returns(uint, uint){
@@ -234,10 +296,6 @@ contract Showcase is Ownable, Multicall {
     }
 
     function doEmptyTransaction() external { }
-
-//    function getMembers() public view returns (address[] memory){
-//        return members.values();
-//    }
 
     function selfDestruct() onlyOwner external {
         try usdcContract.balanceOf(address(this)) returns (uint bal) {

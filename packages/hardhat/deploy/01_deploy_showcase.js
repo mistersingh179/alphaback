@@ -104,42 +104,39 @@ module.exports = async ({
 
   // Getting a previously deployed contract
   const Showcase = await ethers.getContract("Showcase", deployer);
+  const startOfToday = moment.utc().startOf("day").unix();
   if (chainId === 137) {
     const s = "0x378a29135fdFE323414189f682b061fc64aDC0B3";
     const r = "0xdDb1a644f0d61a3E03E9076221BaedA4b70200CE";
     const result = await Showcase.addMembers(
       [s, r],
-      [
-        moment.utc().subtract(1, "days").startOf("day").unix(),
-        moment.utc().subtract(1, "days").startOf("day").unix(),
-      ]
+      [startOfToday, startOfToday]
     );
     console.log(result);
-  } else if (chainId === usdcAddress) {
+  } else if (chainId === localChainId) {
     try {
       const chromeBrowserAddress = "0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283";
       const safariBrowserAddress = "0x8d4941EC90849bF71d4A39C953e3153C953afFb9";
       const result = await Showcase.addMembers(
         [chromeBrowserAddress, safariBrowserAddress],
-        [
-          moment.utc().subtract(1, "days").startOf("day").unix(),
-          moment.utc().subtract(1, "days").startOf("day").unix(),
-        ]
-        // doing -1 day because if you are in the system you should get paid.
-        // when added they are in the member.length, so money is kept aside for them
-        // and a new promotion can come for past
-        // basically when adding someone with last payout on date X, we dont want new advertisers coming in on X.
-        // by keeping yesterday, we know that new promos can't come in on yesterday.
+        [startOfToday, startOfToday]
+        // adding with todays date. this way they dont get paid for today
+        // and any promotion which comes in today before me wont have me in their members count & wont pay me
+        // any promotion which comes tomorrow will have my in their count & will pay me
+        // any promotion which comes today after adding me, will include me in their count but wont pay me
+        // this last scenerio leads to dust
+        // if we put past date then it can withdraw for today, but others have withdraw today before me with different count
+        // if we put future date then new promos coming in the mean time will include me in the count
       );
       console.log(result);
       await deployerSigner.sendTransaction({
         to: chromeBrowserAddress,
-        value: ethers.utils.parseEther(".01"),
+        value: ethers.utils.parseEther("1.01"),
       });
-      const whaleAddress = "0x0D2703ac846c26d5B6Bbddf1FD6027204F409785";
+      const whaleAddress = "0x72a53cdbbcc1b9efa39c834a540550e23463aacb";
       await deployerSigner.sendTransaction({
         to: whaleAddress,
-        value: ethers.utils.parseEther(".01"),
+        value: ethers.utils.parseEther("1.01"),
       });
       await hre.network.provider.request({
         method: "hardhat_impersonateAccount",

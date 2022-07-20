@@ -37,7 +37,6 @@ import {
   Subgraph,
   Showcase,
   Promotions,
-  Promotions2,
 } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
@@ -359,18 +358,6 @@ function App(props) {
         </Route>
         <Route exact path="/promotions">
           {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
-          <Promotions2
-            tx={tx}
-            writeContracts={writeContracts}
-            readContracts={readContracts}
-            address={address}
-            userSigner={userSigner}
-            mainnetProvider={mainnetProvider}
-            localProvider={localProvider}
-          />
-        </Route>
-        <Route exact path="/old-promotions">
-          {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
           <Promotions
             tx={tx}
             writeContracts={writeContracts}
@@ -395,9 +382,6 @@ function App(props) {
             </Menu.Item>
             <Menu.Item key="/showcase">
               <Link to="/showcase">Showcase</Link>
-            </Menu.Item>
-            <Menu.Item key="/old-promotions">
-              <Link to="/old-promotions">Old Promotions</Link>
             </Menu.Item>
             <Menu.Item key="/promotions">
               <Link to="/promotions">Promotions</Link>

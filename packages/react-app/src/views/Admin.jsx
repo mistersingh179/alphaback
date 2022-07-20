@@ -1,5 +1,14 @@
 import { useContractReader } from "eth-hooks";
-import { Button, Col, DatePicker, InputNumber, List, Row } from "antd";
+import {
+  Alert,
+  Button,
+  Col,
+  DatePicker,
+  InputNumber,
+  List,
+  Row,
+  Timeline,
+} from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import moment from "moment";
@@ -9,6 +18,8 @@ import { useUsdcBalance } from "../hooks";
 import usdcAbi from "../contracts/ABI/IERC20.json";
 import { Transactor } from "../helpers";
 import useLastFewMembers from "../hooks/useLastFewMembers";
+import { formatUnits } from "ethers/lib/utils";
+import { Address } from "../components";
 
 const Admin = props => {
   const {
@@ -21,6 +32,12 @@ const Admin = props => {
     yourLocalBalance,
   } = props;
 
+  const blockTimestamp = useContractReader(
+    readContracts,
+    "Showcase",
+    "timestamp",
+  );
+
   const memberCount = useContractReader(
     readContracts,
     "Showcase",
@@ -32,9 +49,9 @@ const Admin = props => {
   const addMembers = async () => {
     const addresses = addressList.split("\n");
     const dates = addresses.map(() =>
-      BigNumber.from(moment().utc().startOf("day").subtract(1, "days").unix()),
+      BigNumber.from(moment().utc().startOf("day").unix()),
     );
-    console.log("going to add: ", addresses, dates);
+    console.log("**** going to add: ", addresses, dates);
     try {
       await tx(writeContracts.Showcase.addMembers(addresses, dates), result => {
         setAddressList("");
@@ -59,7 +76,7 @@ const Admin = props => {
   const memberUsdcBalance = useUsdcBalance(readContracts, address, txHash);
   const getMoreUsdc = async () => {
     const usdcContractAddress = readContracts.USDC.address;
-    const usdcWhaleAddress = "0x0D2703ac846c26d5B6Bbddf1FD6027204F409785";
+    const usdcWhaleAddress = "0x72a53cdbbcc1b9efa39c834a540550e23463aacb";
     await userSigner.sendTransaction({
       to: usdcWhaleAddress,
       value: ethers.utils.parseUnits(".01", 18),
@@ -138,17 +155,73 @@ const Admin = props => {
     );
   };
   const formattedInputtedDayCost = () => {
-    try{
+    try {
       return ethers.utils.formatUnits(inputtedDayCost, 6);
-    }catch(e){
-      return ""
+    } catch (e) {
+      return "";
     }
+  };
+  const [moveForwardDate, setMoveForwardDate] = useState(moment());
+
+  const doEmptyTransaction = async () => {
+    await tx(writeContracts.Showcase.doEmptyTransaction());
   }
+
+  const moveTimeForward = async () => {
+    console.log("*** in moveTimeForward");
+    await localProvider.send("evm_setNextBlockTimestamp", [
+      moveForwardDate.utc().unix(),
+    ]);
+    await localProvider.send("evm_mine");
+  };
+
+  const [showHistory, setShowHistory] = useState(false);
+
+  const ToggleHistoryButton = props => {
+    return (
+      <Button
+        onClick={() => {
+          setShowHistory(val => !val);
+        }}
+      >
+        Toggle History
+      </Button>
+    );
+  };
 
   return (
     <div style={{ marginTop: 20 }}>
       <div>
         <Row gutter={[16, 16]}>
+          <Col span={8} offset={8}>
+            Block Timestamp:{" "}
+            {blockTimestamp &&
+              moment.unix(blockTimestamp.toString()).utc().format()}
+            <br />
+            Machine Timestamp: {moment().utc().format()}
+            {Math.abs(blockTimestamp - moment().utc().unix()) > 60 * 60 && (
+              <Alert message="More than 1 hour Mismatch!" type="error" />
+            )}
+            {Math.abs(blockTimestamp - moment().utc().unix()) <= 60 * 60 && (
+              <Alert
+                message="Times are within 1 hour of each-other."
+                type="success"
+              />
+            )}
+            <br />
+            {/*<DatePicker*/}
+            {/*  showTime={true}*/}
+            {/*  onChange={val => {*/}
+            {/*    if (val) {*/}
+            {/*      setMoveForwardDate(val);*/}
+            {/*    }*/}
+            {/*  }}*/}
+            {/*/>{" "}*/}
+            {/*<Button onClick={moveTimeForward}>Move Time Forward</Button> <br/><br/>*/}
+            <Button onClick={doEmptyTransaction}>Sync w/ Sys Time</Button>
+          </Col>
+          <Col span={8}></Col>
+
           <Col span={8} offset={8}>
             Current Member Count: {memberCount && memberCount.toString()}
           </Col>
@@ -201,10 +274,39 @@ const Admin = props => {
 
           <Col span={8} offset={8}>
             <List
-              header={<div>Last 10 Members</div>}
+              header={
+                <div>
+                  Last 10 Members <ToggleHistoryButton />
+                </div>
+              }
               bordered
               dataSource={lastFew}
-              renderItem={item => <List.Item>{item}</List.Item>}
+              renderItem={item => (
+                <List.Item>
+                  <Address address={item[0]} fontSize={14} />{" "}
+                  {moment.unix(item[1]).utc().format()} - ${" "}
+                  {formatUnits(item[2], 6)} <br />
+                  <br />
+                  {showHistory && (
+                    <Timeline mode={"left"}>
+                      {item[3][0].map(function (obj, i) {
+                        return (
+                          <Timeline.Item
+                            color={
+                              parseInt(item[3][1][i]) > 0 ? "green" : "gray"
+                            }
+                            label={moment.unix(obj).utc().format("YYYY-MM-DD")}
+                          >
+                            {parseInt(item[3][1][i]) >= 0 &&
+                              formatUnits(parseInt(item[3][1][i]), 6)}
+                            {Number.isNaN(parseInt(item[3][1][i])) && item[3][1][i] }
+                          </Timeline.Item>
+                        );
+                      })}
+                    </Timeline>
+                  )}
+                </List.Item>
+              )}
             />
           </Col>
           <Col span={8}></Col>
@@ -227,7 +329,13 @@ const Admin = props => {
             Set Day Cost for {inputtedDate.utc().startOf("day").format()} to{" "}
             {formattedInputtedDayCost()}
             <br />
-            <DatePicker onChange={val => setInputtedDate(val)} />
+            <DatePicker
+              onChange={val => {
+                if (val) {
+                  setInputtedDate(val);
+                }
+              }}
+            />
             <InputNumber
               value={inputtedDayCost}
               onChange={val => setInputtedDayCost(val)}

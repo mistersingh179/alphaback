@@ -74,12 +74,18 @@ const BookPromotionModal = promos => {
       imageUrl,
     } = values;
     try {
+      let fn;
+      if (!initialValues.promoter || initialValues.promoter == AddressZero) {
+        fn = writeContracts.Showcase.addPromotion;
+      } else {
+        fn = writeContracts.Showcase.updatePromotion;
+      }
       const result = await tx(
-        writeContracts.Showcase.addPromotion([
+        fn([
           AddressZero,
           nftContractAddress,
           nftTokenId,
-          "https://" + clickThruUrl,
+          clickThruUrl,
           0,
           selectedDate.unix(),
           title,
@@ -154,6 +160,31 @@ const BookPromotionModal = promos => {
     }
   };
 
+  const submitButton = () => {
+    let txt = "";
+    if (!initialValues.promoter) {
+      txt = "Transfer";
+    } else if (initialValues.promoter == AddressZero) {
+      txt = "Transfer";
+    } else if (initialValues.promoter == address) {
+      txt = "Update";
+    } else if (address == process.env.REACT_APP_DEPLOYER_ADDRESS) {
+      txt = "Admin Update";
+    } else {
+      txt = "";
+    }
+    return (
+      <Button
+        type="primary"
+        htmlType="submit"
+        disabled={!isApproved}
+        style={{ margin: "0 8px" }}
+      >
+        {txt}
+      </Button>
+    );
+  };
+
   return (
     <>
       <Modal
@@ -176,6 +207,13 @@ const BookPromotionModal = promos => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
+          {initialValues.promoter && initialValues.promoter != AddressZero && <Form.Item
+            label="Promoter"
+            name="promoter"
+          >
+            <Input disabled={true} />
+          </Form.Item>}
+
           <Form.Item
             label="NFT Contract Address"
             name="nftContractAddress"
@@ -265,18 +303,7 @@ const BookPromotionModal = promos => {
             <Button type="primary" onClick={approve} disabled={isApproved}>
               Approve
             </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={!isApproved}
-              style={{ margin: "0 8px" }}
-            >
-              {initialValues.promoter == address && "Update"}
-              {initialValues.promoter == AddressZero &&
-                "Transfer"}
-            </Button>
-            {/*<br/>*/}
-            {/*Approved Amount: {ethers.utils.formatUnits(approvedAmount, 6)}*/}
+            {submitButton()}
           </Form.Item>
         </Form>
       </Modal>

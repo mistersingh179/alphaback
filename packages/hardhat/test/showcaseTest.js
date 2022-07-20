@@ -32,6 +32,8 @@ console.log("Running showcaseTest.js: ", network.name, network.config.chainId);
 describe("Showcase", () => {
   const TODAYS_DATE = moment().utc().startOf("day").unix();
   const YESTERDAYS_DATE = moment.unix(TODAYS_DATE).subtract(1, "days").unix();
+  const TOMORROWS_DATE = moment.unix(TODAYS_DATE).add(1, "days").unix();
+
   const DAY_BEFORE_YESTERDAY_DATE = moment
     .unix(TODAYS_DATE)
     .subtract(2, "days")
@@ -47,7 +49,7 @@ describe("Showcase", () => {
     moment.unix(TODAYS_DATE).utc().format("YYYY-MM-DD")
   );
 
-  const usdcWhaleAddress = "0x0D2703ac846c26d5B6Bbddf1FD6027204F409785";
+  const usdcWhaleAddress = "0x72a53cdbbcc1b9efa39c834a540550e23463aacb";
 
   const showcaseFixture = async () => {
     const [w0, w1, w2] = provider.getWallets();
@@ -73,11 +75,13 @@ describe("Showcase", () => {
       usdcAbi,
       provider
     ).connect(usdcWhaleSigner);
+    let whaleUsdcBal = await usdcContract.balanceOf(usdcWhaleAddress);
+    console.log("usdc bal of whale is: ", formatUnits(whaleUsdcBal, 6));
     const largelAmount = ethers.BigNumber.from(2).pow(256).sub(1);
     for (let w of [w0, w1, w2]) {
       console.log("setting up wallet: ", w.address);
       await usdcContract.connect(w).approve(showcase.address, largelAmount);
-      await usdcContract.transfer(w.address, parseUnits("100000", 6));
+      await usdcContract.transfer(w.address, parseUnits("1000000", 6));
       let usdcBal = await usdcContract.balanceOf(w.address);
       console.log("usdc bal of: ", w.address, "is: ", formatUnits(usdcBal, 6));
     }
@@ -92,7 +96,6 @@ describe("Showcase", () => {
     await network.provider.send("evm_mine");
     return { showcase, w0, w1, w2, usdcContract };
   };
-
 
   describe("without any promotion", () => {
     let showcase;
@@ -139,17 +142,19 @@ describe("Showcase", () => {
       expect(promotionResult[0]).to.be.equal(samplePromotion[0]); // check all values
     });
 
-    it.only("sets promoter to sender in promotion", async () => {
+    it("sets promoter to sender in promotion", async () => {
       await showcase.connect(w1).addPromotion(samplePromotion);
 
       const promotionResult = await showcase.promotions(TODAYS_DATE);
       expect(promotionResult.promoter).to.be.equal(w1.address);
 
-      await showcase.connect(w2).addPromotion(samplePromotion);
+      const anotherPromo = [...samplePromotion];
+      anotherPromo[5] = TOMORROWS_DATE;
+      await showcase.connect(w2).addPromotion(anotherPromo);
 
-      const promotionResult2 = await showcase.promotions(TODAYS_DATE);
+      const promotionResult2 = await showcase.promotions(TOMORROWS_DATE);
       expect(promotionResult2.promoter).to.be.equal(w2.address);
-    })
+    });
 
     it("can update your promotion", async () => {
       const origPromotion = [...samplePromotion];
@@ -174,7 +179,8 @@ describe("Showcase", () => {
 
       const updatedPromotion = [...samplePromotion];
       updatedPromotion[3] = "http://b.com";
-      await expect(showcase.connect(w2).updatePromotion(updatedPromotion)).to.be.reverted;
+      await expect(showcase.connect(w2).updatePromotion(updatedPromotion)).to.be
+        .reverted;
     });
 
     it("owner can update anyones promotion", async () => {
@@ -186,7 +192,8 @@ describe("Showcase", () => {
 
       const updatedPromotion = [...samplePromotion];
       updatedPromotion[3] = "http://abcdef.com";
-      await expect(showcase.connect(w0).updatePromotion(updatedPromotion)).to.not.be.reverted;
+      await expect(showcase.connect(w0).updatePromotion(updatedPromotion)).to
+        .not.be.reverted;
       const updatedPromo = await showcase.promotions(TODAYS_DATE);
       expect(updatedPromo.clickThruUrl).to.be.equal("http://abcdef.com");
     });
@@ -442,21 +449,21 @@ describe("Showcase", () => {
       });
 
       it("can get all 5 members", async () => {
-        const count  = await showcase.membersCount();
+        const count = await showcase.membersCount();
         const members = [];
-        for(let i=0;i<count;i++){
+        for (let i = 0; i < count; i++) {
           members[i] = await showcase.memberAtIndex(i);
           console.log(members[i]);
           expect(members[i][0]).to.not.be.equal(constants.AddressZero);
         }
-      })
+      });
 
       it("reverts for members which dont exist", async () => {
-        await expect(showcase.memberAtIndex(5)).to.be.reverted
-      })
+        await expect(showcase.memberAtIndex(5)).to.be.reverted;
+      });
 
       describe("memberBalance", () => {
-        it("gives 0 balance when no promos", async () => {
+        it("gives 0 balance when no promos ", async () => {
           const [bal] = await showcase.memberBalance(
             addresses[0],
             sequentialDates
@@ -893,6 +900,39 @@ describe("Showcase", () => {
 
       xit("can get all members", async () => {});
     });
+
+    describe("with 1 member added today", () => {
+      let firstWallet;
+      beforeEach(async () => {
+        let now = moment().utc().startOf("day");
+        firstWallet = ethers.Wallet.createRandom().connect(provider);
+        await showcase
+          .connect(w0)
+          .addMembers([firstWallet.address], [now.unix()]);
+      });
+      it("promotion has 1 memberCount based on existing members", async () => {
+        const todaysPromo = [...samplePromotion];
+        await showcase.connect(w1).addPromotion(todaysPromo);
+        expect((await showcase.promotions(TODAYS_DATE)).memberCount).to.eq(1);
+      });
+      it("promotions memberCount changes as members move in and out", async () => {
+        const tomorrowsPromo = [...samplePromotion];
+        const now = moment().utc().startOf("day");
+        const TOM_DATE = TOMORROWS_DATE;
+        tomorrowsPromo[5] = TOMORROWS_DATE;
+        await showcase.connect(w1).addPromotion(tomorrowsPromo);
+        expect((await showcase.promotions(TOM_DATE)).memberCount).to.eq(1);
+        let secondWallet = ethers.Wallet.createRandom().connect(provider);
+        await showcase
+          .connect(w0)
+          .addMembers([secondWallet.address], [now.unix()]);
+        expect((await showcase.promotions(TOM_DATE)).memberCount).to.eq(2);
+        await showcase.connect(w0).removeMembers([secondWallet.address]);
+        expect((await showcase.promotions(TOM_DATE)).memberCount).to.eq(1);
+        await showcase.connect(w0).removeMembers([firstWallet.address]);
+        expect((await showcase.promotions(TOM_DATE)).memberCount).to.eq(0);
+      });
+    });
   });
 
   describe("with many promotions", () => {
@@ -1032,6 +1072,21 @@ describe("Showcase", () => {
     it("gives promotion date as 0 when promotion not present", async () => {
       const promotionResult = await showcase.promotions(HUNDRED_DAYS_AGO_DATE);
       expect(promotionResult[5]).to.be.equal(0);
+    });
+
+    it("reverts when trying to add promotion on same date", async () => {
+      const tempPromotion = [...promotion];
+      tempPromotion[3] = "http://foobar.xyz";
+      await expect(showcase.connect(w1).addPromotion(tempPromotion)).to.be
+        .reverted;
+    });
+
+    it("does not reverts when trying to add promotion with diff date", async () => {
+      const tempPromotion = [...promotion];
+      tempPromotion[3] = "http://foobar.xyz";
+      tempPromotion[5] = TOMORROWS_DATE;
+      await expect(showcase.connect(w1).addPromotion(tempPromotion)).to.not.be
+        .reverted;
     });
   });
 });

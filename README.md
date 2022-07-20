@@ -5,3 +5,4 @@
 # Todo
 
 - ui should show preview of image
+- use checkupkeep & performUpKeep to keep promo dates to dates in future
