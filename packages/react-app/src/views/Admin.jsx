@@ -163,6 +163,10 @@ const Admin = props => {
   };
   const [moveForwardDate, setMoveForwardDate] = useState(moment());
 
+  const doEmptyTransaction = async () => {
+    await tx(writeContracts.Showcase.doEmptyTransaction());
+  }
+
   const moveTimeForward = async () => {
     console.log("*** in moveTimeForward");
     await localProvider.send("evm_setNextBlockTimestamp", [
@@ -205,15 +209,16 @@ const Admin = props => {
               />
             )}
             <br />
-            <DatePicker
-              showTime={true}
-              onChange={val => {
-                if (val) {
-                  setMoveForwardDate(val);
-                }
-              }}
-            />{" "}
-            <Button onClick={moveTimeForward}>Move Time Forward </Button>
+            {/*<DatePicker*/}
+            {/*  showTime={true}*/}
+            {/*  onChange={val => {*/}
+            {/*    if (val) {*/}
+            {/*      setMoveForwardDate(val);*/}
+            {/*    }*/}
+            {/*  }}*/}
+            {/*/>{" "}*/}
+            {/*<Button onClick={moveTimeForward}>Move Time Forward</Button> <br/><br/>*/}
+            <Button onClick={doEmptyTransaction}>Sync w/ Sys Time</Button>
           </Col>
           <Col span={8}></Col>
 

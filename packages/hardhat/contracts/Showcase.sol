@@ -155,16 +155,24 @@ contract Showcase is Ownable, Multicall {
         uint startOfTomorrow = block.timestamp - (block.timestamp % (24*60*60)) + (24*60*60);
         console.log("startOfTomorrow: ", startOfTomorrow);
         uint currentMemberCount = membersCount();
+        console.log("current members count:");
         console.log(currentMemberCount);
+        console.log("num of promotions:");
+        console.log(promotionDates.length);
         if(promotionDates.length >= 1){
-            console.log(promotionDates.length);
-            for(uint i=promotionDates.length;i>0;i--){
-                if(promotions[promotionDates[i-1]].date >= startOfTomorrow){
-                    if(promotions[promotionDates[i-1]].memberCount != currentMemberCount){
-                        promotions[promotionDates[i-1]].memberCount = currentMemberCount;
+            for(uint i=0;i<promotionDates.length;i++){
+                console.log("inspecting promo");
+                console.log(promotions[promotionDates[i]].date);
+                if(promotions[promotionDates[i]].date >= startOfTomorrow){
+                    console.log("this promo is in future");
+                    if(promotions[promotionDates[i]].memberCount != currentMemberCount){
+                        console.log("promo has wrong member count. fixing it");
+                        promotions[promotionDates[i]].memberCount = currentMemberCount;
+                    }else{
+                        console.log("promo has correct count. nothing to fix");
                     }
                 }else{
-                    break;
+                    console.log("skipping promo as it is not in the future");
                 }
             }
         }
