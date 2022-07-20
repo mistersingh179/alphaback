@@ -165,7 +165,6 @@ const Admin = props => {
 
   const moveTimeForward = async () => {
     console.log("*** in moveTimeForward");
-    debugger;
     await localProvider.send("evm_setNextBlockTimestamp", [
       moveForwardDate.utc().unix(),
     ]);
