@@ -1,5 +1,5 @@
 import { useContractReader } from "eth-hooks";
-import { Button, Col, DatePicker, InputNumber, List, Row } from "antd";
+import { Alert, Button, Col, DatePicker, InputNumber, List, Row } from 'antd'
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import moment from "moment";
@@ -9,6 +9,8 @@ import { useUsdcBalance } from "../hooks";
 import usdcAbi from "../contracts/ABI/IERC20.json";
 import { Transactor } from "../helpers";
 import useLastFewMembers from "../hooks/useLastFewMembers";
+import { formatUnits } from "ethers/lib/utils";
+import { Address } from '../components'
 
 const Admin = props => {
   const {
@@ -163,6 +165,28 @@ const Admin = props => {
       <div>
         <Row gutter={[16, 16]}>
           <Col span={8} offset={8}>
+            Block Timestamp:{" "}
+            {blockTimestamp &&
+              moment.unix(blockTimestamp.toString()).utc().format()}
+            <br />
+            Machine Timestamp:{" "}
+            {moment().utc().format()}
+            {(Math.abs(blockTimestamp - moment().utc().unix()) > 60*60) &&  <Alert message="More than 1 hour Mismatch!" type="error" />}
+            {(Math.abs(blockTimestamp - moment().utc().unix()) <= 60*60) &&  <Alert message="Times are within 1 hour of each-other." type="success" />}
+            <br />
+            <DatePicker
+              showTime={true}
+              onChange={val => {
+                if (val) {
+                  setMoveForwardDate(val);
+                }
+              }}
+            />{" "}
+            <Button onClick={moveTimeForward}>Move Time Forward </Button>
+          </Col>
+          <Col span={8}></Col>
+
+          <Col span={8} offset={8}>
             Current Member Count: {memberCount && memberCount.toString()}
           </Col>
           <Col span={8}></Col>
@@ -217,7 +241,13 @@ const Admin = props => {
               header={<div>Last 10 Members</div>}
               bordered
               dataSource={lastFew}
-              renderItem={item => <List.Item>{item}</List.Item>}
+              renderItem={item => (
+                <List.Item>
+                  <Address address={item[0]} fontSize={14}/>{" "}
+                  {moment(item[1]).utc().format()} -{" "}
+                  $ {formatUnits(item[2], 6)}
+                </List.Item>
+              )}
             />
           </Col>
           <Col span={8}></Col>
@@ -254,25 +284,6 @@ const Admin = props => {
             />{" "}
             No decimals please
             <Button onClick={updateDayCost}>Update Daily Cost </Button>
-          </Col>
-          <Col span={8}></Col>
-
-          <Col span={8} offset={8}>
-            Block Timestamp: {blockTimestamp && blockTimestamp.toString()}{" "}
-            <br />
-            Block Timestamp Formatted:{" "}
-            {blockTimestamp &&
-              moment.unix(blockTimestamp.toString()).utc().format()}
-            <br />
-            <DatePicker
-              showTime={true}
-              onChange={val => {
-                if (val) {
-                  setMoveForwardDate(val);
-                }
-              }}
-            />{" "}
-            <Button onClick={moveTimeForward}>Move Time Forward </Button>
           </Col>
           <Col span={8}></Col>
         </Row>

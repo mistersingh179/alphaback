@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { getSeqDates } from '../helpers'
 
 const useLastFewMembers = (readContract, txHash) => {
   const [lastFew, setLastFew] = useState([]);
@@ -12,7 +13,9 @@ const useLastFewMembers = (readContract, txHash) => {
     if(readContract && readContract.Showcase && readContract.Showcase.memberAtIndex){
       for(let i=memberCount-1;i>=0;i--){
         const [addr, lastPayoutDate] = await readContract.Showcase.memberAtIndex(i);
-        tempList.push(addr);
+        const seqDates = await getSeqDates(readContract, addr);
+        const [bal, newLastPayoutDate] = await readContract.Showcase.memberBalance(addr, seqDates);
+        tempList.push([addr, lastPayoutDate, bal]);
         if(tempList.length == 10){
           break;
         }
