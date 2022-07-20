@@ -1050,7 +1050,7 @@
       "chainId": "31337",
       "contracts": {
         "Showcase": {
-          "address": "0xF6fE49c266c1C5D2676d3a32642fA96402A1A49a",
+          "address": "0xA87B4C8C8b9F7735a6a1EE6a9e698E3aa7e3A9d5",
           "abi": [
             {
               "inputs": [
