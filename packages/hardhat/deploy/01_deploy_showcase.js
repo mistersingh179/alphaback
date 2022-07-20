@@ -104,15 +104,13 @@ module.exports = async ({
 
   // Getting a previously deployed contract
   const Showcase = await ethers.getContract("Showcase", deployer);
+  const startOfToday = moment.utc().startOf("day").unix();
   if (chainId === 137) {
     const s = "0x378a29135fdFE323414189f682b061fc64aDC0B3";
     const r = "0xdDb1a644f0d61a3E03E9076221BaedA4b70200CE";
     const result = await Showcase.addMembers(
       [s, r],
-      [
-        moment.utc().subtract(1, "days").startOf("day").unix(),
-        moment.utc().subtract(1, "days").startOf("day").unix(),
-      ]
+      [startOfToday, startOfToday]
     );
     console.log(result);
   } else if (chainId === localChainId) {
@@ -121,7 +119,7 @@ module.exports = async ({
       const safariBrowserAddress = "0x8d4941EC90849bF71d4A39C953e3153C953afFb9";
       const result = await Showcase.addMembers(
         [chromeBrowserAddress, safariBrowserAddress],
-        [moment.utc().startOf("day").unix(), moment.utc().startOf("day").unix()]
+        [startOfToday, startOfToday]
         // adding with todays date. this way they dont get paid for today
         // and any promotion which comes in today before me wont have me in their members count & wont pay me
         // any promotion which comes tomorrow will have my in their count & will pay me
