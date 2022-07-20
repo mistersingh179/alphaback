@@ -5,7 +5,7 @@
       "chainId": "137",
       "contracts": {
         "Showcase": {
-          "address": "0xA3e17fAf9989d8E7462Bb8509BCa603d34A1d520",
+          "address": "0x558A218B91B1794D376cBe7dA090b5c88aed0EC4",
           "abi": [
             {
               "inputs": [
@@ -440,6 +440,30 @@
             {
               "inputs": [
                 {
+                  "internalType": "address",
+                  "name": "_memberAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "promoDates",
+                  "type": "uint256[]"
+                }
+              ],
+              "name": "memberBalanceHistory",
+              "outputs": [
+                {
+                  "internalType": "string[]",
+                  "name": "",
+                  "type": "string[]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
                   "internalType": "uint256[]",
                   "name": "promoDates",
                   "type": "uint256[]"
@@ -490,6 +514,25 @@
                   "internalType": "address",
                   "name": "",
                   "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "name": "promotionDates",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
                 }
               ],
               "stateMutability": "view",
