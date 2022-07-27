@@ -42,7 +42,7 @@ const Admin = props => {
     const dates = addresses.map(() =>
       BigNumber.from(moment().utc().startOf("day").unix()),
     );
-    console.log("going to add: ", addresses, dates);
+    console.log("**** going to add: ", addresses, dates);
     try {
       await tx(writeContracts.Showcase.addMembers(addresses, dates), result => {
         setAddressList("");
@@ -244,7 +244,7 @@ const Admin = props => {
               renderItem={item => (
                 <List.Item>
                   <Address address={item[0]} fontSize={14}/>{" "}
-                  {moment(item[1]).utc().format()} -{" "}
+                  {moment.unix(item[1]).utc().format()} -{" "}
                   $ {formatUnits(item[2], 6)}
                 </List.Item>
               )}
