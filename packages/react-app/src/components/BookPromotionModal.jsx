@@ -207,6 +207,13 @@ const BookPromotionModal = promos => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
+          {initialValues.promoter && initialValues.promoter != AddressZero && <Form.Item
+            label="Promoter"
+            name="promoter"
+          >
+            <Input disabled={true} />
+          </Form.Item>}
+
           <Form.Item
             label="NFT Contract Address"
             name="nftContractAddress"

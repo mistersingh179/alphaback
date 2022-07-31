@@ -15,8 +15,9 @@ const useLastFewMembers = (readContract, txHash) => {
         const [addr, lastPayoutDate] = await readContract.Showcase.memberAtIndex(i);
         const seqDates = await getSeqDates(readContract, addr);
         const [bal, newLastPayoutDate] = await readContract.Showcase.memberBalance(addr, seqDates);
-        tempList.push([addr, lastPayoutDate, bal]);
-        if(tempList.length == 10){
+        const messages = await readContract.Showcase.memberBalanceHistory(addr, seqDates);
+        tempList.push([addr, lastPayoutDate, bal, [seqDates, messages]]);
+        if(tempList.length == 20){
           break;
         }
       }

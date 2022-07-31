@@ -1,5 +1,14 @@
 import { useContractReader } from "eth-hooks";
-import { Alert, Button, Col, DatePicker, InputNumber, List, Row } from 'antd'
+import {
+  Alert,
+  Button,
+  Col,
+  DatePicker,
+  InputNumber,
+  List,
+  Row,
+  Timeline,
+} from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import moment from "moment";
@@ -10,7 +19,7 @@ import usdcAbi from "../contracts/ABI/IERC20.json";
 import { Transactor } from "../helpers";
 import useLastFewMembers from "../hooks/useLastFewMembers";
 import { formatUnits } from "ethers/lib/utils";
-import { Address } from '../components'
+import { Address } from "../components";
 
 const Admin = props => {
   const {
@@ -155,11 +164,28 @@ const Admin = props => {
   const [moveForwardDate, setMoveForwardDate] = useState(moment());
 
   const moveTimeForward = async () => {
+    console.log("*** in moveTimeForward");
+    debugger;
     await localProvider.send("evm_setNextBlockTimestamp", [
       moveForwardDate.utc().unix(),
     ]);
     await localProvider.send("evm_mine");
   };
+
+  const [showHistory, setShowHistory] = useState(false);
+
+  const ToggleHistoryButton = props => {
+    return (
+      <Button
+        onClick={() => {
+          setShowHistory(val => !val);
+        }}
+      >
+        Toggle History
+      </Button>
+    );
+  };
+
   return (
     <div style={{ marginTop: 20 }}>
       <div>
@@ -169,10 +195,16 @@ const Admin = props => {
             {blockTimestamp &&
               moment.unix(blockTimestamp.toString()).utc().format()}
             <br />
-            Machine Timestamp:{" "}
-            {moment().utc().format()}
-            {(Math.abs(blockTimestamp - moment().utc().unix()) > 60*60) &&  <Alert message="More than 1 hour Mismatch!" type="error" />}
-            {(Math.abs(blockTimestamp - moment().utc().unix()) <= 60*60) &&  <Alert message="Times are within 1 hour of each-other." type="success" />}
+            Machine Timestamp: {moment().utc().format()}
+            {Math.abs(blockTimestamp - moment().utc().unix()) > 60 * 60 && (
+              <Alert message="More than 1 hour Mismatch!" type="error" />
+            )}
+            {Math.abs(blockTimestamp - moment().utc().unix()) <= 60 * 60 && (
+              <Alert
+                message="Times are within 1 hour of each-other."
+                type="success"
+              />
+            )}
             <br />
             <DatePicker
               showTime={true}
@@ -238,14 +270,37 @@ const Admin = props => {
 
           <Col span={8} offset={8}>
             <List
-              header={<div>Last 10 Members</div>}
+              header={
+                <div>
+                  Last 10 Members <ToggleHistoryButton />
+                </div>
+              }
               bordered
               dataSource={lastFew}
               renderItem={item => (
                 <List.Item>
-                  <Address address={item[0]} fontSize={14}/>{" "}
-                  {moment.unix(item[1]).utc().format()} -{" "}
-                  $ {formatUnits(item[2], 6)}
+                  <Address address={item[0]} fontSize={14} />{" "}
+                  {moment.unix(item[1]).utc().format()} - ${" "}
+                  {formatUnits(item[2], 6)} <br />
+                  <br />
+                  {showHistory && (
+                    <Timeline mode={"left"}>
+                      {item[3][0].map(function (obj, i) {
+                        return (
+                          <Timeline.Item
+                            color={
+                              parseInt(item[3][1][i]) > 0 ? "green" : "gray"
+                            }
+                            label={moment.unix(obj).utc().format("YYYY-MM-DD")}
+                          >
+                            {parseInt(item[3][1][i]) >= 0 &&
+                              formatUnits(parseInt(item[3][1][i]), 6)}
+                            {Number.isNaN(parseInt(item[3][1][i])) && item[3][1][i] }
+                          </Timeline.Item>
+                        );
+                      })}
+                    </Timeline>
+                  )}
                 </List.Item>
               )}
             />

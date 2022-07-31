@@ -14,6 +14,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Multicall.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Showcase is Ownable, Multicall {
     using EnumerableMap for EnumerableMap.AddressToUintMap;
@@ -174,6 +175,35 @@ contract Showcase is Ownable, Multicall {
             membersWithPayoutDate.remove(_members[i]);
         }
         resetMemberCountOfAllFuturePromotions();
+    }
+
+    function memberBalanceHistory(address _memberAddress, uint[] memory promoDates) public view returns(string[] memory){
+        uint lastPayoutDate = membersWithPayoutDate.get(_memberAddress);
+        string[] memory messages = new string[](promoDates.length);
+        for(uint i=0;i<promoDates.length;i++){
+            Promotion memory tempPromo = promotions[promoDates[i]];
+            console.log(tempPromo.date, tempPromo.amount);
+
+            if(tempPromo.amount == 0){
+                messages[i] = "skipping promo date as no money there";
+                continue;
+            }
+            if(tempPromo.date <= lastPayoutDate){
+                messages[i] = "skipping promo date as before or equal to lastPayoutDate";
+                continue;
+            }
+            if(tempPromo.date > block.timestamp) {
+                messages[i] = "skipping promo date as after now";
+                continue;
+            }
+            if(tempPromo.memberCount == 0){
+                messages[i] = "skipping promo as it has no members";
+                continue;
+            }
+            uint amt = ((tempPromo.amount * installBasePercentage) / 100) / tempPromo.memberCount;
+            messages[i] = Strings.toString(amt);
+        }
+        return messages;
     }
 
     function memberBalance(address _memberAddress, uint[] memory promoDates) public view returns(uint, uint){

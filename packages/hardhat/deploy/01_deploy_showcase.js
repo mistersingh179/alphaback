@@ -131,12 +131,12 @@ module.exports = async ({
       console.log(result);
       await deployerSigner.sendTransaction({
         to: chromeBrowserAddress,
-        value: ethers.utils.parseEther(".01"),
+        value: ethers.utils.parseEther("1.01"),
       });
       const whaleAddress = "0x72a53cdbbcc1b9efa39c834a540550e23463aacb";
       await deployerSigner.sendTransaction({
         to: whaleAddress,
-        value: ethers.utils.parseEther(".01"),
+        value: ethers.utils.parseEther("1.01"),
       });
       await hre.network.provider.request({
         method: "hardhat_impersonateAccount",
