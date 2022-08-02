@@ -14,7 +14,7 @@ import TextArea from "antd/es/input/TextArea";
 import moment from "moment";
 import { BigNumber, utils } from "ethers";
 import { ethers } from "ethers";
-import { useUsdcBalance } from "../hooks";
+import { useUsdcBalance, useProxyContract } from "../hooks";
 import usdcAbi from "../contracts/ABI/IERC20.json";
 import { Transactor } from "../helpers";
 import useLastFewMembers from "../hooks/useLastFewMembers";
@@ -30,6 +30,7 @@ const Admin = props => {
     userSigner,
     localProvider,
     yourLocalBalance,
+    localChainId,
   } = props;
 
   const blockTimestamp = useContractReader(
@@ -165,7 +166,7 @@ const Admin = props => {
 
   const doEmptyTransaction = async () => {
     await tx(writeContracts.Showcase.doEmptyTransaction());
-  }
+  };
 
   const moveTimeForward = async () => {
     console.log("*** in moveTimeForward");
@@ -186,6 +187,27 @@ const Admin = props => {
       >
         Toggle History
       </Button>
+    );
+  };
+
+  const fooContract = useProxyContract(
+    "Foo",
+    localChainId,
+    localProvider,
+    userSigner,
+  );
+  const [count, setCount] = useState(0);
+  useEffect(async () => {
+    if (fooContract) {
+      console.log("***reading count from fooContract");
+      const c = await fooContract.count();
+      console.log("***and got: ", c);
+      setCount(c);
+    }
+  }, [fooContract, txHash]);
+  const incrementCount = async () => {
+    await tx(fooContract.incrementCount(), result =>
+      setTxHash(result.transactionHash),
     );
   };
 
@@ -299,7 +321,8 @@ const Admin = props => {
                           >
                             {parseInt(item[3][1][i]) >= 0 &&
                               formatUnits(parseInt(item[3][1][i]), 6)}
-                            {Number.isNaN(parseInt(item[3][1][i])) && item[3][1][i] }
+                            {Number.isNaN(parseInt(item[3][1][i])) &&
+                              item[3][1][i]}
                           </Timeline.Item>
                         );
                       })}
@@ -343,6 +366,12 @@ const Admin = props => {
             />{" "}
             No decimals please
             <Button onClick={updateDayCost}>Update Daily Cost </Button>
+          </Col>
+          <Col span={8}></Col>
+
+          <Col span={8} offset={8}>
+            Foo Count: {count && count.toString()}
+            <Button onClick={incrementCount}>Increment Count</Button>
           </Col>
           <Col span={8}></Col>
         </Row>

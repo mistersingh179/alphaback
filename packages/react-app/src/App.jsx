@@ -413,6 +413,7 @@ function App(props) {
                 address={address}
                 tx={tx}
                 userSigner={userSigner}
+                localChainId={localChainId}
               />
             </Route>
             <Route exact path="/home">

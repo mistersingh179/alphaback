@@ -3034,10 +3034,38 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@openzeppelin/contracts-upgradeable@^4.7.2":
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.7.2.tgz#414096e21f048200cbb7ad4fe4c6de2e822513bf"
+  integrity sha512-3dgc6qVmFch/uOmlmKnw5/v3JxwXcZD4T10/9CI1OUbX8AqjoZrBGKfxN1z3QxnIXRU/X31/BItJezJSDDTe7Q==
+
 "@openzeppelin/contracts@^4.7.0":
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.7.0.tgz#3092d70ea60e3d1835466266b1d68ad47035a2d5"
   integrity sha512-52Qb+A1DdOss8QvJrijYYPSf32GUg2pGaG/yCxtaA3cu4jduouTdg4XZSMLW9op54m1jH7J8hoajhHKOPsoJFw==
+
+"@openzeppelin/hardhat-upgrades@^1.19.1":
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/hardhat-upgrades/-/hardhat-upgrades-1.19.1.tgz#34907928c0b4acdfbc2cffa32eb59730a5b62e3e"
+  integrity sha512-LvUClx+c8DIS6T5ZEPsz+HSRztvY9wjAI4qZH8IaTswjPAT/mqXZWmuQF96fFopR+jKpUNmI4IUo5wLt2TkdKQ==
+  dependencies:
+    "@openzeppelin/upgrades-core" "^1.16.0"
+    chalk "^4.1.0"
+    debug "^4.1.1"
+    proper-lockfile "^4.1.1"
+
+"@openzeppelin/upgrades-core@^1.16.0":
+  version "1.17.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/upgrades-core/-/upgrades-core-1.17.0.tgz#f9941d83f9532d8e8b1ff570d2a3cb1e40a8769c"
+  integrity sha512-GaR3XiJ5PUKrHwz+EFJ9gtj2/taiFRWufbUaCgc1JEit1ERB9fI8PWEO0VTL+KzCZPl6meyT7RIhKNBRcX6jsA==
+  dependencies:
+    cbor "^8.0.0"
+    chalk "^4.1.0"
+    compare-versions "^4.0.0"
+    debug "^4.1.1"
+    ethereumjs-util "^7.0.3"
+    proper-lockfile "^4.1.1"
+    solidity-ast "^0.4.15"
 
 "@pmmmwh/react-refresh-webpack-plugin@0.4.2":
   version "0.4.2"
@@ -7002,6 +7030,13 @@ cbor@^5.0.2:
     bignumber.js "^9.0.1"
     nofilter "^1.0.4"
 
+cbor@^8.0.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/cbor/-/cbor-8.1.0.tgz#cfc56437e770b73417a2ecbfc9caf6b771af60d5"
+  integrity sha512-DwGjNW9omn6EwP70aXsn7FQJx5kO12tX0bZkaTjzdVFM6/7nhA4t0EENocKGx6D2Bch9PE2KzCUf5SceBdeijg==
+  dependencies:
+    nofilter "^3.1.0"
+
 cborg@^1.5.4, cborg@^1.6.0:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/cborg/-/cborg-1.6.1.tgz#d5c6f6cfa8539588918c3936814caddc65e8e5ec"
@@ -7169,6 +7204,21 @@ chokidar@^3.4.0, chokidar@^3.4.1, chokidar@^3.5.2:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.2.tgz#dba3976fcadb016f66fd365021d91600d01c1e75"
   integrity sha512-ekGhOnNVPgT77r4K/U3GDhu+FQ2S8TnK/s2KbIGXi0SZWuwkZ2QNyfWdZW+TVfn84DpEP7rLeCt2UI6bJ8GwbQ==
+  dependencies:
+    anymatch "~3.1.2"
+    braces "~3.0.2"
+    glob-parent "~5.1.2"
+    is-binary-path "~2.1.0"
+    is-glob "~4.0.1"
+    normalize-path "~3.0.0"
+    readdirp "~3.6.0"
+  optionalDependencies:
+    fsevents "~2.3.2"
+
+chokidar@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"
+  integrity sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==
   dependencies:
     anymatch "~3.1.2"
     braces "~3.0.2"
@@ -7546,6 +7596,11 @@ commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
   integrity sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=
+
+compare-versions@^4.0.0:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-4.1.3.tgz#8f7b8966aef7dc4282b45dfa6be98434fc18a1a4"
+  integrity sha512-WQfnbDcrYnGr55UwbxKiQKASnTtNnaAWVi8jZyy8NTpVAXWACSne8lMD1iaIo9AiU6mnuLvSVshCzewVuWxHUg==
 
 component-emitter@^1.2.1:
   version "1.3.0"
@@ -9988,6 +10043,17 @@ ethereumjs-util@^7.0.10, ethereumjs-util@^7.0.2, ethereumjs-util@^7.0.7, ethereu
     ethjs-util "0.1.6"
     rlp "^2.2.4"
 
+ethereumjs-util@^7.0.3:
+  version "7.1.5"
+  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-7.1.5.tgz#9ecf04861e4fbbeed7465ece5f23317ad1129181"
+  integrity sha512-SDl5kKrQAudFBUe5OJM9Ac6WmMyYmXX/6sTmLZ3ffG2eY6ZIGBes3pEDxNN6V72WyOw4CPD5RomKdsa8DAAwLg==
+  dependencies:
+    "@types/bn.js" "^5.1.0"
+    bn.js "^5.1.2"
+    create-hash "^1.1.2"
+    ethereum-cryptography "^0.1.3"
+    rlp "^2.2.4"
+
 ethereumjs-vm@4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/ethereumjs-vm/-/ethereumjs-vm-4.2.0.tgz#e885e861424e373dbc556278f7259ff3fca5edab"
@@ -11768,6 +11834,13 @@ hardhat-gas-reporter@^1.0.4:
   dependencies:
     eth-gas-reporter "^0.2.20"
     sha1 "^1.1.1"
+
+hardhat-watcher@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/hardhat-watcher/-/hardhat-watcher-2.3.0.tgz#57586a7fb79b73365014794f7e3dc0706aa65b7d"
+  integrity sha512-u76a/1pxPyW9DRZ7FZ8HoSQ4AuKOiSDQTR2NyiZlH5f0Ux+qQfahsh9CNusRLhx2s1OWzlkwCVvrdHq5FTGUzw==
+  dependencies:
+    chokidar "^3.5.3"
 
 hardhat@2.6.0:
   version "2.6.0"
@@ -16079,6 +16152,11 @@ nofilter@^1.0.4:
   resolved "https://registry.yarnpkg.com/nofilter/-/nofilter-1.0.4.tgz#78d6f4b6a613e7ced8b015cec534625f7667006e"
   integrity sha512-N8lidFp+fCz+TD51+haYdbDGrcBWwuHX40F5+z0qkUjMJ5Tp+rdSuAkMJ9N9eoolDlEVTf6u5icM+cNKkKW2mA==
 
+nofilter@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/nofilter/-/nofilter-3.1.0.tgz#c757ba68801d41ff930ba2ec55bab52ca184aa66"
+  integrity sha512-l2NNj07e9afPnhAhvgVrCD/oy2Ai1yfLpuo3EpiO1jFTsB4sFz6oIfAfSZyQzVpkZQ9xS8ZS5g1jCBgq4Hwo0g==
+
 noop-logger@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/noop-logger/-/noop-logger-0.1.1.tgz#94a2b1633c4f1317553007d8966fd0e841b6a4c2"
@@ -18020,6 +18098,15 @@ prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
     loose-envify "^1.4.0"
     object-assign "^4.1.1"
     react-is "^16.8.1"
+
+proper-lockfile@^4.1.1:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/proper-lockfile/-/proper-lockfile-4.1.2.tgz#c8b9de2af6b2f1601067f98e01ac66baa223141f"
+  integrity sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==
+  dependencies:
+    graceful-fs "^4.2.4"
+    retry "^0.12.0"
+    signal-exit "^3.0.2"
 
 protobufjs@^6.10.2:
   version "6.11.2"
@@ -20315,6 +20402,11 @@ solc@^0.6.3:
     require-from-string "^2.0.0"
     semver "^5.5.0"
     tmp "0.0.33"
+
+solidity-ast@^0.4.15:
+  version "0.4.35"
+  resolved "https://registry.yarnpkg.com/solidity-ast/-/solidity-ast-0.4.35.tgz#82e064b14dc989338123264bde2235cad751f128"
+  integrity sha512-F5bTDLh3rmDxRmLSrs3qt3nvxJprWSEkS7h2KmuXDx7XTfJ6ZKVTV1rtPIYCqJAuPsU/qa8YUeFn7jdOAZcTPA==
 
 sort-keys@^1.0.0:
   version "1.1.2"
