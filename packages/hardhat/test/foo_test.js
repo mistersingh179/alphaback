@@ -9,7 +9,7 @@ const {
 } = ethers;
 const { deployProxy, upgradeProxy, erc1967 } = upgrades;
 
-describe.only("Foo", () => {
+describe("Foo", () => {
   describe("v1", () => {
     let foo1;
     before(async () => {

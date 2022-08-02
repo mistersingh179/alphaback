@@ -13,7 +13,7 @@ require("hardhat-abi-exporter");
 require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-etherscan");
 require("@openzeppelin/hardhat-upgrades");
-require('hardhat-watcher')
+require("hardhat-watcher");
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 
@@ -64,9 +64,14 @@ module.exports = {
       "https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=4GNTDCMXVGECYNSES575CKBTAVFUE2GFXK",
     currency: "USD",
     coinmarketcap: "df001212-260d-48cb-8785-069fb5d39ac8",
+    enabled: process.env.REPORT_GAS ? true : false,
   },
 
   watcher: {
+    compile: {
+      files: ["./contracts"],
+      tasks: ["compile"],
+    },
     deploy_proxies: {
       files: ["./contracts", "./scripts/deploy/**.js"],
       tasks: [
@@ -86,6 +91,10 @@ module.exports = {
           params: { script: "scripts/deploy/03_upgrade_to_FooV3_impl.js" },
         },
       ],
+    },
+    test: {
+      files: ["./contracts", "./test/**.js"],
+      tasks: ["test"],
     },
   },
 
