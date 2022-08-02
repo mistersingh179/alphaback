@@ -6,4 +6,5 @@ export { default as useDailyPrices } from "./useDailyPrices";
 export { default as useMemberBalance } from "./useMemberBalance";
 export { default as useUsdcBalance } from "./useUsdcBalance";
 export { default as useLastFewMembers } from "./useLastFewMembers";
+export { default as useProxyContract } from "./useProxyContract";
 export * from "./useContractConfig";

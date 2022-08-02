@@ -791,8 +791,8 @@ module.exports = {
       USDC: {
         address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
         abi: ERC20ABI,
-      }
-    }
+      },
+    },
   },
   1: {
     contracts: {
@@ -807,7 +807,7 @@ module.exports = {
       USDC: {
         address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
         abi: ERC20ABI,
-      }
+      },
     },
   },
   137: {
@@ -815,15 +815,15 @@ module.exports = {
       USDC: {
         address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
         abi: ERC20ABI,
-      }
-    }
+      },
+    },
   },
   80001: {
     contracts: {
       USDC: {
         address: "0x0fa8781a83e46826621b3bc094ea2a0212e71b23",
         abi: ERC20ABI,
-      }
-    }
-  }
+      },
+    },
+  },
 };

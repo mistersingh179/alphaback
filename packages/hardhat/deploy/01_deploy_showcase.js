@@ -105,7 +105,9 @@ module.exports = async ({
   // Getting a previously deployed contract
   const Showcase = await ethers.getContract("Showcase", deployer);
   const startOfToday = moment.utc().startOf("day").unix();
-  if (chainId === 137) {
+  const membersCount = await Showcase.membersCount();
+  console.log("membersCount: ", membersCount.toNumber(), membersCount.eq(0));
+  if (membersCount.eq(0) && chainId === "137") {
     const s = "0x378a29135fdFE323414189f682b061fc64aDC0B3";
     const r = "0xdDb1a644f0d61a3E03E9076221BaedA4b70200CE";
     const result = await Showcase.addMembers(
