@@ -27,7 +27,7 @@ const {
   loadFixture,
 } = waffle;
 
-describe.only("NftPromotion", () => {
+describe.only("Promotions", () => {
   const TODAYS_DATE = moment().utc().startOf("day").unix();
   const YESTERDAYS_DATE = moment.unix(TODAYS_DATE).subtract(1, "days").unix();
   const TOMORROWS_DATE = moment.unix(TODAYS_DATE).add(1, "days").unix();
@@ -36,10 +36,11 @@ describe.only("NftPromotion", () => {
     .unix(TODAYS_DATE)
     .subtract(2, "days")
     .unix();
+
   const HUNDRED_DAYS_AGO_DATE = moment
-    .unix(TODAYS_DATE)
-    .subtract(100, "days")
-    .unix();
+  .unix(TODAYS_DATE)
+  .subtract(100, "days")
+  .unix();
 
   console.log(
     "TODAYS_DATE: ",
@@ -50,7 +51,7 @@ describe.only("NftPromotion", () => {
   const usdcWhaleAddress = "0x72a53cdbbcc1b9efa39c834a540550e23463aacb";
 
   describe("v1", () => {
-    const showcaseFixture = async () => {
+    const promotionsFixture = async () => {
       console.log("*** in nftPromotionFixture ***");
       const [w0, w1, w2] = provider.getWallets();
       const chainId = await getChainId();
@@ -63,15 +64,15 @@ describe.only("NftPromotion", () => {
         usdcAddress = "0x2791bca1f2de4661ed88a30c99a7a9449aa84174";
       }
 
-      const NftPromotionV1 = await ethers.getContractFactory("NftPromotionV1");
-      const nftPromotionV1 = await upgrades.deployProxy(
-        NftPromotionV1,
+      const PromotionsV1 = await ethers.getContractFactory("PromotionsV1");
+      const promotionsV1 = await deployProxy(
+        PromotionsV1,
         [usdcAddress],
         {
           kind: "uups",
         }
       );
-      await nftPromotionV1.deployed();
+      await promotionsV1.deployed();
 
       await provider.send("hardhat_impersonateAccount", [usdcWhaleAddress]);
       const usdcWhaleSigner = await provider.getSigner(usdcWhaleAddress);
@@ -92,7 +93,7 @@ describe.only("NftPromotion", () => {
         console.log("setting up wallet: ", w.address);
         await usdcContract
           .connect(w)
-          .approve(nftPromotionV1.address, largelAmount);
+          .approve(promotionsV1.address, largelAmount);
         await usdcContract.transfer(w.address, parseUnits("1000000", 6));
         const usdcBal = await usdcContract.balanceOf(w.address);
         console.log(w.address, "has USDC: ", formatUnits(usdcBal, 6));
@@ -106,25 +107,8 @@ describe.only("NftPromotion", () => {
         moment.utc().unix(),
       ]);
       await network.provider.send("evm_mine");
-      return { showcase: nftPromotionV1, w0, w1, w2, usdcContract };
+      return { showcase: promotionsV1, w0, w1, w2, usdcContract };
     };
-    // let nftPromotionV1;
-    // beforeEach(async () => {
-    //   const fixtureObj = await loadFixture(nftPromotionFixture);
-    //   nftPromotionV1 = fixtureObj.nftPromotionV1;
-    // });
-    // it("has a proxy address", () => {
-    //   expect(nftPromotionV1.address).to.be.properAddress;
-    //   expect(nftPromotionV1.address).to.not.be.eq(AddressZero);
-    // });
-    // it("has implementation address", async () => {
-    //   const implAddr = await erc1967.getImplementationAddress(
-    //     nftPromotionV1.address
-    //   );
-    //   expect(implAddr).to.be.properAddress;
-    //   expect(implAddr).to.not.be.eq(AddressZero);
-    // });
-
     describe("without any promotion", () => {
       let showcase;
       let w0;
@@ -134,7 +118,7 @@ describe.only("NftPromotion", () => {
       let samplePromotion;
 
       beforeEach(async () => {
-        const obj = await loadFixture(showcaseFixture);
+        const obj = await loadFixture(promotionsFixture);
         showcase = obj.showcase;
         w2 = obj.w2;
         w1 = obj.w1;
@@ -153,6 +137,18 @@ describe.only("NftPromotion", () => {
           "",
           0,
         ];
+      });
+
+      it("has a proxy address", () => {
+        expect(showcase.address).to.be.properAddress;
+        expect(showcase.address).to.not.be.eq(AddressZero);
+      });
+      it("has implementation address", async () => {
+        const implAddr = await erc1967.getImplementationAddress(
+          showcase.address
+        );
+        expect(implAddr).to.be.properAddress;
+        expect(implAddr).to.not.be.eq(AddressZero);
       });
 
       it("has an address ", async () => {
@@ -970,7 +966,7 @@ describe.only("NftPromotion", () => {
       let promotions;
 
       beforeEach(async () => {
-        const obj = await loadFixture(showcaseFixture);
+        const obj = await loadFixture(promotionsFixture);
         showcase = obj.showcase;
         w1 = obj.w1;
         w0 = obj.w0;
@@ -1060,7 +1056,7 @@ describe.only("NftPromotion", () => {
       let w1;
 
       beforeEach(async () => {
-        const obj = await loadFixture(showcaseFixture);
+        const obj = await loadFixture(promotionsFixture);
         showcase = obj.showcase;
         w1 = obj.w1;
         w0 = obj.w0;

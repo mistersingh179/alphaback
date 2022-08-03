@@ -18,7 +18,7 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 
-contract NftPromotionStorageV1 {
+contract PromotionsStorageV1 {
     EnumerableMapUpgradeable.AddressToUintMap internal membersWithPayoutDate;
     IERC20Upgradeable public usdcContract;
     mapping(uint => Promotion) public promotions;
@@ -45,7 +45,7 @@ contract NftPromotionStorageV1 {
     uint[92] __gap;
 }
 
-contract NftPromotionV1 is NftPromotionStorageV1, Initializable,
+contract PromotionsV1 is PromotionsStorageV1, Initializable,
   UUPSUpgradeable, OwnableUpgradeable {
 
     using EnumerableMapUpgradeable for EnumerableMapUpgradeable.AddressToUintMap;
