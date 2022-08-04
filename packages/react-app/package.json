@@ -47,7 +47,6 @@
     "moment": "^2.29.3",
     "node-watch": "^0.7.1",
     "postcss": "^8.2.6",
-    "prop-types": "^15.8.1",
     "qrcode.react": "^1.0.0",
     "react": "^17.0.2",
     "react-blockies": "^1.4.1",
