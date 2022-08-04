@@ -51,6 +51,8 @@ contract PromotionsV1 is PromotionsStorageV1, Initializable,
     using EnumerableMapUpgradeable for EnumerableMapUpgradeable.AddressToUintMap;
 
     event PromotionAdded(Promotion promotion);
+    event MemberAdded(address memberAddress, uint lastPayoutDate);
+    event MemberRemoved(address memberAddress);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -164,6 +166,7 @@ contract PromotionsV1 is PromotionsStorageV1, Initializable,
             console.log(_members[i]);
             console.log(_payoutDates[i]);
             membersWithPayoutDate.set(_members[i], _payoutDates[i]);
+            emit MemberAdded(_members[i], _payoutDates[i]);
             console.log("done");
         }
         resetMemberCountOfAllFuturePromotions();
@@ -199,6 +202,7 @@ contract PromotionsV1 is PromotionsStorageV1, Initializable,
     function removeMembers(address[] memory _members) public onlyOwner(){
         for(uint i=0;i<_members.length;i++){
             membersWithPayoutDate.remove(_members[i]);
+            emit MemberRemoved(_members[i]);
         }
         resetMemberCountOfAllFuturePromotions();
     }

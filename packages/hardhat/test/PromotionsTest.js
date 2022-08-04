@@ -38,9 +38,9 @@ describe.only("Promotions", () => {
     .unix();
 
   const HUNDRED_DAYS_AGO_DATE = moment
-  .unix(TODAYS_DATE)
-  .subtract(100, "days")
-  .unix();
+    .unix(TODAYS_DATE)
+    .subtract(100, "days")
+    .unix();
 
   console.log(
     "TODAYS_DATE: ",
@@ -65,13 +65,9 @@ describe.only("Promotions", () => {
       }
 
       const PromotionsV1 = await ethers.getContractFactory("PromotionsV1");
-      const promotionsV1 = await deployProxy(
-        PromotionsV1,
-        [usdcAddress],
-        {
-          kind: "uups",
-        }
-      );
+      const promotionsV1 = await deployProxy(PromotionsV1, [usdcAddress], {
+        kind: "uups",
+      });
       await promotionsV1.deployed();
 
       await provider.send("hardhat_impersonateAccount", [usdcWhaleAddress]);
@@ -203,8 +199,8 @@ describe.only("Promotions", () => {
 
         const updatedPromotion = [...samplePromotion];
         updatedPromotion[3] = "http://b.com";
-        await expect(showcase.connect(w2).updatePromotion(updatedPromotion)).to.be
-          .reverted;
+        await expect(showcase.connect(w2).updatePromotion(updatedPromotion)).to
+          .be.reverted;
       });
 
       it("owner can update anyones promotion", async () => {
@@ -238,8 +234,8 @@ describe.only("Promotions", () => {
       it("can add a promotion at start of today", async () => {
         const startOfToday = moment().utc().startOf("day");
         samplePromotion[5] = startOfToday.unix();
-        await expect(showcase.connect(w1).addPromotion(samplePromotion)).to.not.be
-          .reverted;
+        await expect(showcase.connect(w1).addPromotion(samplePromotion)).to.not
+          .be.reverted;
       });
 
       describe("can access promo cost", () => {
@@ -338,8 +334,8 @@ describe.only("Promotions", () => {
         });
 
         it("can change price if owner", async () => {
-          await expect(showcase.connect(w0).setDayCost(TODAYS_DATE, 1)).to.not.be
-            .reverted;
+          await expect(showcase.connect(w0).setDayCost(TODAYS_DATE, 1)).to.not
+            .be.reverted;
         });
 
         it("contract grows in funds", async () => {
@@ -347,7 +343,9 @@ describe.only("Promotions", () => {
           const defaultCost = await showcase.defaultCost();
           await showcase.connect(w1).addPromotion(samplePromotion);
           const balAfter = await usdcContract.balanceOf(showcase.address);
-          expect(balAfter.sub(balBefore)).to.be.equal(defaultCost.mul(7).div(10));
+          expect(balAfter.sub(balBefore)).to.be.equal(
+            defaultCost.mul(7).div(10)
+          );
         });
 
         it("can withdraw if owner", async () => {
@@ -371,7 +369,9 @@ describe.only("Promotions", () => {
           );
           expect(showcaseBalBefore).to.be.eq(0);
           await showcase.connect(w0).addPromotion(samplePromotion);
-          const showcaseBalAfter = await usdcContract.balanceOf(showcase.address);
+          const showcaseBalAfter = await usdcContract.balanceOf(
+            showcase.address
+          );
           expect(showcaseBalAfter).to.be.eq(0);
         });
 
@@ -381,7 +381,9 @@ describe.only("Promotions", () => {
           );
           expect(showcaseBalBefore).to.be.eq(0);
           await showcase.connect(w1).addPromotion(samplePromotion);
-          const showcaseBalAfter = await usdcContract.balanceOf(showcase.address);
+          const showcaseBalAfter = await usdcContract.balanceOf(
+            showcase.address
+          );
           expect(showcaseBalAfter).to.be.gt(0);
         });
 
@@ -421,12 +423,12 @@ describe.only("Promotions", () => {
         // cost for 7 - 524120
         // cost is 68K
         it("can add a member with owner wallet", async () => {
-          await expect(showcase.connect(w0).addMembers(addresses, signupDates)).to
-            .not.be.reverted;
+          await expect(showcase.connect(w0).addMembers(addresses, signupDates))
+            .to.not.be.reverted;
         });
         it("can NOT add a member without owner wallet", async () => {
-          await expect(showcase.connect(w1).addMembers(addresses, signupDates)).to
-            .be.reverted;
+          await expect(showcase.connect(w1).addMembers(addresses, signupDates))
+            .to.be.reverted;
         });
       });
 
@@ -443,7 +445,9 @@ describe.only("Promotions", () => {
           lastPayoutDate = moment().utc().startOf("day").subtract(10, "days");
           now = moment().utc().startOf("day");
 
-          const numOfDays = moment.duration(now.diff(lastPayoutDate)).as("days");
+          const numOfDays = moment
+            .duration(now.diff(lastPayoutDate))
+            .as("days");
           sequentialDates = [];
           for (let i = 1; i <= numOfDays; i++) {
             sequentialDates.push(lastPayoutDate.clone().add(i, "days").unix());
@@ -498,10 +502,10 @@ describe.only("Promotions", () => {
           it("gives positive balance if promo has ran", async () => {
             const oneDayOldPromo = [...samplePromotion];
             const yesterday = moment()
-            .utc()
-            .startOf("day")
-            .subtract(1, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(1, "days")
+              .unix();
             oneDayOldPromo[5] = yesterday;
             await showcase.connect(w1).addPromotion(oneDayOldPromo);
             const [bal] = await showcase.memberBalance(
@@ -516,10 +520,10 @@ describe.only("Promotions", () => {
 
             const oneDayOldPromo = [...samplePromotion];
             const yesterday = moment()
-            .utc()
-            .startOf("day")
-            .subtract(1, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(1, "days")
+              .unix();
             oneDayOldPromo[5] = yesterday;
 
             await showcase.connect(w1).addPromotion(oneDayOldPromo);
@@ -533,10 +537,10 @@ describe.only("Promotions", () => {
           it("reverts if member doesn't exist", async () => {
             const oneDayOldPromo = [...samplePromotion];
             const yesterday = moment()
-            .utc()
-            .startOf("day")
-            .subtract(1, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(1, "days")
+              .unix();
             oneDayOldPromo[5] = yesterday;
             await showcase.connect(w1).addPromotion(oneDayOldPromo);
 
@@ -553,10 +557,10 @@ describe.only("Promotions", () => {
           it("gives 0 balance if signed up after promo ", async () => {
             const oldPromo = [...samplePromotion];
             oldPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .subtract(20, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(20, "days")
+              .unix();
             await showcase.connect(w1).addPromotion(oldPromo);
             const [bal] = await showcase.memberBalance(
               addresses[0],
@@ -568,18 +572,18 @@ describe.only("Promotions", () => {
           it("does not count past promos for balance", async () => {
             const hundredDayOldPromo = [...samplePromotion];
             hundredDayOldPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .subtract(100, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(100, "days")
+              .unix();
             await showcase.connect(w1).addPromotion(hundredDayOldPromo);
 
             const yesterdayPromo = [...samplePromotion];
             yesterdayPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .subtract(1, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(1, "days")
+              .unix();
             await showcase.connect(w1).addPromotion(yesterdayPromo);
 
             const todayPromo = [...samplePromotion];
@@ -587,7 +591,11 @@ describe.only("Promotions", () => {
             await showcase.connect(w1).addPromotion(todayPromo);
 
             const defaultCost = await showcase.defaultCost();
-            const expectBal = defaultCost.add(defaultCost).mul(7).div(10).div(5);
+            const expectBal = defaultCost
+              .add(defaultCost)
+              .mul(7)
+              .div(10)
+              .div(5);
             const [bal] = await showcase.memberBalance(
               addresses[0],
               sequentialDates
@@ -602,24 +610,24 @@ describe.only("Promotions", () => {
 
             const tomorrowPromo = [...samplePromotion];
             tomorrowPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .add(1, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .add(1, "days")
+              .unix();
             await showcase.connect(w1).addPromotion(tomorrowPromo);
 
             const dayAfterTomorrowPromo = [...samplePromotion];
             dayAfterTomorrowPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .add(2, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .add(2, "days")
+              .unix();
             await showcase.connect(w1).addPromotion(dayAfterTomorrowPromo);
 
             const defaultCost = (await showcase.defaultCost())
-            .mul(7)
-            .div(10)
-            .div(5);
+              .mul(7)
+              .div(10)
+              .div(5);
 
             const [bal] = await showcase.memberBalance(
               addresses[0],
@@ -633,18 +641,18 @@ describe.only("Promotions", () => {
 
             const hundredDayOldPromo = [...samplePromotion];
             hundredDayOldPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .subtract(100, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(100, "days")
+              .unix();
             await showcase.connect(w1).addPromotion(hundredDayOldPromo);
 
             const yesterdayPromo = [...samplePromotion];
             yesterdayPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .subtract(1, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(1, "days")
+              .unix();
             await showcase.setDayCost(yesterdayPromo[5], 10);
             await showcase.connect(w1).addPromotion(yesterdayPromo);
 
@@ -654,10 +662,10 @@ describe.only("Promotions", () => {
 
             const tomorrowPromo = [...samplePromotion];
             tomorrowPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .add(1, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .add(1, "days")
+              .unix();
             await showcase.connect(w1).addPromotion(tomorrowPromo);
             const [bal] = await showcase.memberBalance(
               addresses[0],
@@ -673,10 +681,10 @@ describe.only("Promotions", () => {
 
             const yesterdayPromo = [...samplePromotion];
             yesterdayPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .subtract(1, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(1, "days")
+              .unix();
 
             const [bal] = await showcase.memberBalance(
               addresses[0],
@@ -691,15 +699,17 @@ describe.only("Promotions", () => {
               sequentialDates
             );
             console.log("*** updateBal: ", updateBal.toString());
-            expect(updateBal).to.be.eq(BigNumber.from(101).mul(7).div(10).div(5));
+            expect(updateBal).to.be.eq(
+              BigNumber.from(101).mul(7).div(10).div(5)
+            );
             expect(await usdcContract.balanceOf(addresses[0])).to.be.equal(0);
             expect(
               (await showcase.getMembersLastPayoutDate([addresses[0]]))[0]
             ).to.not.be.eq(now.unix());
 
             await showcase
-            .connect(wallets[0])
-            .memberWithdrawBalance(sequentialDates);
+              .connect(wallets[0])
+              .memberWithdrawBalance(sequentialDates);
 
             const [balAfterWithdrawl] = await showcase.memberBalance(
               addresses[0],
@@ -719,10 +729,10 @@ describe.only("Promotions", () => {
 
             const yesterdayPromo = [...samplePromotion];
             yesterdayPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .subtract(1, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(1, "days")
+              .unix();
 
             await showcase.connect(w1).addPromotion(yesterdayPromo);
             const [bal0] = await showcase.memberBalance(
@@ -737,8 +747,8 @@ describe.only("Promotions", () => {
             expect(bal1).to.be.eq(BigNumber.from(100).mul(7).div(10).div(5));
 
             await showcase
-            .connect(wallets[0])
-            .memberWithdrawBalance(sequentialDates);
+              .connect(wallets[0])
+              .memberWithdrawBalance(sequentialDates);
 
             const [bal0After] = await showcase.memberBalance(
               addresses[0],
@@ -749,7 +759,9 @@ describe.only("Promotions", () => {
               addresses[1],
               sequentialDates
             );
-            expect(bal1After).to.be.eq(BigNumber.from(100).mul(7).div(10).div(5));
+            expect(bal1After).to.be.eq(
+              BigNumber.from(100).mul(7).div(10).div(5)
+            );
           });
 
           it("accumulates the balance so each wallet can withdraw at schedule", async () => {
@@ -757,17 +769,17 @@ describe.only("Promotions", () => {
 
             const yesterdayPromo = [...samplePromotion];
             yesterdayPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .subtract(1, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(1, "days")
+              .unix();
 
             const fivesDayAgoPromo = [...samplePromotion];
             fivesDayAgoPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .subtract(5, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(5, "days")
+              .unix();
 
             await showcase.connect(w1).addPromotion(fivesDayAgoPromo);
 
@@ -778,10 +790,13 @@ describe.only("Promotions", () => {
               (await showcase.memberBalance(addresses[1], sequentialDates))[0]
             ).to.be.eq(BigNumber.from(100).mul(7).div(10).div(5));
 
-            const fiveDaysAgo = moment().utc().startOf("day").subtract(5, "days");
+            const fiveDaysAgo = moment()
+              .utc()
+              .startOf("day")
+              .subtract(5, "days");
             const numOfDays = moment
-            .duration(fiveDaysAgo.diff(lastPayoutDate))
-            .as("days");
+              .duration(fiveDaysAgo.diff(lastPayoutDate))
+              .as("days");
             const seqFromLastToFiveDaysAgo = [];
             for (let i = 1; i <= numOfDays; i++) {
               seqFromLastToFiveDaysAgo.push(
@@ -790,8 +805,8 @@ describe.only("Promotions", () => {
             }
 
             await showcase
-            .connect(wallets[0])
-            .memberWithdrawBalance(seqFromLastToFiveDaysAgo);
+              .connect(wallets[0])
+              .memberWithdrawBalance(seqFromLastToFiveDaysAgo);
 
             expect(
               (await showcase.memberBalance(addresses[0], sequentialDates))[0]
@@ -810,11 +825,11 @@ describe.only("Promotions", () => {
             ).to.be.eq(BigNumber.from(100).mul(7).div(10).div(5));
 
             await showcase
-            .connect(wallets[0])
-            .memberWithdrawBalance(sequentialDates);
+              .connect(wallets[0])
+              .memberWithdrawBalance(sequentialDates);
             await showcase
-            .connect(wallets[1])
-            .memberWithdrawBalance(sequentialDates);
+              .connect(wallets[1])
+              .memberWithdrawBalance(sequentialDates);
 
             expect(
               (await showcase.memberBalance(addresses[0], sequentialDates))[0]
@@ -833,10 +848,10 @@ describe.only("Promotions", () => {
           it("reverts if a non member tries to withdraw", async () => {
             const yesterdayPromo = [...samplePromotion];
             yesterdayPromo[5] = moment()
-            .utc()
-            .startOf("day")
-            .subtract(1, "days")
-            .unix();
+              .utc()
+              .startOf("day")
+              .subtract(1, "days")
+              .unix();
 
             await showcase.connect(w1).addPromotion(yesterdayPromo);
             await expect(showcase.memberWithdrawBalance(sequentialDates)).to.be
@@ -883,12 +898,12 @@ describe.only("Promotions", () => {
           threeDayOldPromo[5] = ThreeDayAgo.unix();
 
           await showcase
-          .connect(w0)
-          .addMembers([walletTenDayOld.address], [TenDayAgo.unix()]);
+            .connect(w0)
+            .addMembers([walletTenDayOld.address], [TenDayAgo.unix()]);
           await showcase.connect(w1).addPromotion(sevenDayOldPromo);
           await showcase
-          .connect(w0)
-          .addMembers([walletFiveDayOld.address], [FiveDayAgo.unix()]);
+            .connect(w0)
+            .addMembers([walletFiveDayOld.address], [FiveDayAgo.unix()]);
           await showcase.connect(w1).addPromotion(threeDayOldPromo);
 
           expect(
@@ -911,13 +926,28 @@ describe.only("Promotions", () => {
 
         it("can remove members", async () => {
           await showcase
-          .connect(w0)
-          .addMembers([walletTenDayOld.address], [TenDayAgo.unix()]);
+            .connect(w0)
+            .addMembers([walletTenDayOld.address], [TenDayAgo.unix()]);
           const origCount = await showcase.membersCount();
           expect(origCount).to.be.eq(1);
           await showcase.connect(w0).removeMembers([walletTenDayOld.address]);
           const newCount = await showcase.membersCount();
           expect(newCount).to.be.eq(0);
+        });
+
+        it("emits Member Addess & MemberRemoved when member is added or removed", async () => {
+          await expect(
+            showcase
+              .connect(w0)
+              .addMembers([walletTenDayOld.address], [TenDayAgo.unix()])
+          )
+            .to.emit(showcase, "MemberAdded")
+            .withArgs(walletTenDayOld.address, TenDayAgo.unix());
+          await expect(
+            showcase.connect(w0).removeMembers([walletTenDayOld.address])
+          )
+            .to.emit(showcase, "MemberRemoved")
+            .withArgs(walletTenDayOld.address);
         });
 
         xit("can get member by index", async () => {});
@@ -931,8 +961,8 @@ describe.only("Promotions", () => {
           let now = moment().utc().startOf("day");
           firstWallet = ethers.Wallet.createRandom().connect(provider);
           await showcase
-          .connect(w0)
-          .addMembers([firstWallet.address], [now.unix()]);
+            .connect(w0)
+            .addMembers([firstWallet.address], [now.unix()]);
         });
         it("promotion has 1 memberCount based on existing members", async () => {
           const todaysPromo = [...samplePromotion];
@@ -948,8 +978,8 @@ describe.only("Promotions", () => {
           expect((await showcase.promotions(TOM_DATE)).memberCount).to.eq(1);
           let secondWallet = ethers.Wallet.createRandom().connect(provider);
           await showcase
-          .connect(w0)
-          .addMembers([secondWallet.address], [now.unix()]);
+            .connect(w0)
+            .addMembers([secondWallet.address], [now.unix()]);
           expect((await showcase.promotions(TOM_DATE)).memberCount).to.eq(2);
           await showcase.connect(w0).removeMembers([secondWallet.address]);
           expect((await showcase.promotions(TOM_DATE)).memberCount).to.eq(1);
@@ -973,10 +1003,10 @@ describe.only("Promotions", () => {
 
         promotions = [...Array(10)].map((elem, idx) => {
           const promotionDate = moment()
-          .utc()
-          .startOf("day")
-          .subtract(idx, "days")
-          .unix();
+            .utc()
+            .startOf("day")
+            .subtract(idx, "days")
+            .unix();
           return {
             promoter: w1.address,
             nftContractAddress: constants.AddressZero,
@@ -1094,7 +1124,9 @@ describe.only("Promotions", () => {
       });
 
       it("gives promotion date as 0 when promotion not present", async () => {
-        const promotionResult = await showcase.promotions(HUNDRED_DAYS_AGO_DATE);
+        const promotionResult = await showcase.promotions(
+          HUNDRED_DAYS_AGO_DATE
+        );
         expect(promotionResult[5]).to.be.equal(0);
       });
 
