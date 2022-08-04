@@ -38,7 +38,7 @@ import {
   Showcase,
   Promotions,
 } from "./views";
-import { useStaticJsonRPC } from "./hooks";
+import { useProxyContract, useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
 window.ethers = ethers;
@@ -177,12 +177,25 @@ function App(props) {
 
   // Load in your local 📝 contract and read a value from it:
   const readContracts = useContractLoader(localProvider, contractConfig);
+  readContracts.Showcase = useProxyContract(
+    "Promotions",
+    localChainId,
+    localProvider,
+    null,
+  );
+  console.log("*** readContracts: ", readContracts);
 
   // If you want to make 🔐 write transactions to your contracts, use the userSigner:
   const writeContracts = useContractLoader(
     userSigner,
     contractConfig,
     localChainId,
+  );
+  writeContracts.Showcase = useProxyContract(
+    "Promotions",
+    localChainId,
+    null,
+    userSigner,
   );
 
   // EXTERNAL CONTRACT EXAMPLE:
@@ -366,6 +379,7 @@ function App(props) {
             userSigner={userSigner}
             mainnetProvider={mainnetProvider}
             localProvider={localProvider}
+            localChainId={localChainId}
           />
         </Route>
         <Route>
@@ -454,7 +468,11 @@ function App(props) {
                 blockExplorer={blockExplorer}
                 contractConfig={contractConfig}
               />
-              <br/><br/><br/><br/><br/>
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
             </Route>
             <Route path="/hints">
               <Hints
