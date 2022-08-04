@@ -50,9 +50,11 @@ contract PromotionsV1 is PromotionsStorageV1, Initializable,
 
     using EnumerableMapUpgradeable for EnumerableMapUpgradeable.AddressToUintMap;
 
-    event PromotionAdded(Promotion promotion);
+    event PromotionAdded(address promoter, uint promotionDate, uint amount);
     event MemberAdded(address memberAddress, uint lastPayoutDate);
     event MemberRemoved(address memberAddress);
+    event MoneyIn(address sender, uint amount);
+    event MoneyOut(address receiver, uint amount);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -118,14 +120,17 @@ contract PromotionsV1 is PromotionsStorageV1, Initializable,
         require(usdcContract.allowance(msg.sender, address(this)) >= amount, "you need to approve contract to spend 1000+ usdc");
         require(usdcContract.balanceOf(msg.sender) >= amount, "you don't have enough usdc");
         require(usdcContract.transferFrom(msg.sender, address(this), amount), "transfer of usdc to contract failed");
+        emit MoneyIn(msg.sender, amount);
 
         usdcContract.transfer(owner(), (amount*(100-installBasePercentage))/100);
-        emit PromotionAdded(_promotion);
+        emit MoneyOut(owner(), (amount*(100-installBasePercentage))/100);
+
         _promotion.amount = amount;
         _promotion.memberCount = membersWithPayoutDate.length();
         _promotion.promoter = msg.sender;
         promotions[_promotion.date] = _promotion;
         promotionDates.push(_promotion.date);
+        emit PromotionAdded(msg.sender, _promotion.date, amount);
     }
 
     function withdraw(uint amount) public onlyOwner{
@@ -135,6 +140,7 @@ contract PromotionsV1 is PromotionsStorageV1, Initializable,
         console.log(contractsBal);
         require(amount <= contractsBal, "not enough balance");
         usdcContract.transfer(msg.sender, amount);
+        emit MoneyOut(msg.sender, amount);
     }
 
     function withdrawEth(uint amount) public onlyOwner{
@@ -307,6 +313,7 @@ contract PromotionsV1 is PromotionsStorageV1, Initializable,
 
         membersWithPayoutDate.set(msg.sender, newLastPayoutDate);
         usdcContract.transfer(msg.sender, amount);
+        emit MoneyOut(msg.sender, amount);
     }
 
     function timestamp() public view returns(uint) {

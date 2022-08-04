@@ -923,7 +923,7 @@ describe.only("Promotions", () => {
             )[0]
           ).to.be.eq(35);
         });
-
+;
         it("can remove members", async () => {
           await showcase
             .connect(w0)

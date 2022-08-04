@@ -85,6 +85,44 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "MoneyIn",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "MoneyOut",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "previousOwner",
@@ -104,67 +142,22 @@
     "anonymous": false,
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "promoter",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "nftContractAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "nftTokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "clickThruUrl",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "date",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "title",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "subTitle",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "networkName",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "imageUrl",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "memberCount",
-            "type": "uint256"
-          }
-        ],
         "indexed": false,
-        "internalType": "struct PromotionsStorageV1.Promotion",
-        "name": "promotion",
-        "type": "tuple"
+        "internalType": "address",
+        "name": "promoter",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "promotionDate",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
       }
     ],
     "name": "PromotionAdded",
