@@ -61,7 +61,7 @@ export default function Showcase(props) {
     if (window && window.dataLayer && address) {
       // console.log("*** going to push: ", window.dataLayer, address);
       window.dataLayer.push({
-        user_id: 'wid: '+address,
+        user_id: ''+address,
         event: 'userLogin',
       });
     }
