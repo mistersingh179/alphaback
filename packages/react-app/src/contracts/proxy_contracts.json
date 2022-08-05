@@ -926,7 +926,7 @@
   },
   "31337": {
     "Foo": {
-      "address": "0xa03Ad5bC17aC4B1d9825E27bB9fa8657CE5FEE14",
+      "address": "0x83d54e6A000d12573fe031A40f7706205D3C6c4B",
       "abi": [
         {
           "inputs": [],
@@ -1130,7 +1130,7 @@
       ]
     },
     "Promotions": {
-      "address": "0xCDfeA0AEF415AF859b3470dfF5eAaDc6df327fD2",
+      "address": "0xB3e984Db2AB160A1d22A612Cc78e1fC09a11fFDf",
       "abi": [
         {
           "inputs": [],
