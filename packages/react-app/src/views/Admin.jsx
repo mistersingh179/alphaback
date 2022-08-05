@@ -190,26 +190,26 @@ const Admin = props => {
     );
   };
 
-  const fooContract = useProxyContract(
-    "Foo",
-    localChainId,
-    localProvider,
-    userSigner,
-  );
-  const [count, setCount] = useState(0);
-  useEffect(async () => {
-    if (fooContract) {
-      console.log("***reading count from fooContract");
-      const c = await fooContract.count();
-      console.log("***and got: ", c);
-      setCount(c);
-    }
-  }, [fooContract, txHash]);
-  const incrementCount = async () => {
-    await tx(fooContract.incrementCount(), result =>
-      setTxHash(result.transactionHash),
-    );
-  };
+  // const fooContract = useProxyContract(
+  //   "Foo",
+  //   localChainId,
+  //   localProvider,
+  //   userSigner,
+  // );
+  // const [count, setCount] = useState(0);
+  // useEffect(async () => {
+  //   if (fooContract) {
+  //     console.log("***reading count from fooContract");
+  //     const c = await fooContract.count();
+  //     console.log("***and got: ", c);
+  //     setCount(c);
+  //   }
+  // }, [fooContract, txHash]);
+  // const incrementCount = async () => {
+  //   await tx(fooContract.incrementCount(), result =>
+  //     setTxHash(result.transactionHash),
+  //   );
+  // };
 
   return (
     <div style={{ marginTop: 20 }}>
@@ -369,11 +369,11 @@ const Admin = props => {
           </Col>
           <Col span={8}></Col>
 
-          <Col span={8} offset={8}>
-            Foo Count: {count && count.toString()}
-            <Button onClick={incrementCount}>Increment Count</Button>
-          </Col>
-          <Col span={8}></Col>
+          {/*<Col span={8} offset={8}>*/}
+          {/*  Foo Count: {count && count.toString()}*/}
+          {/*  <Button onClick={incrementCount}>Increment Count</Button>*/}
+          {/*</Col>*/}
+          {/*<Col span={8}></Col>*/}
         </Row>
         <br />
         <br />
