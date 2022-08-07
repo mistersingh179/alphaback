@@ -15,7 +15,7 @@ const useProxyContract = (
       proxyContracts &&
       proxyContracts[localChainId] &&
       proxyContracts[localChainId][contractName] &&
-      (localProvider || userSigner)
+      (userSigner || localProvider)
     ) {
       const FooContractInfo = proxyContracts[localChainId][contractName];
       const contract = new ethers.Contract(

@@ -11,7 +11,7 @@ packages/hardhat/deployments
 packages/hardhat/cache*
 packages/**/data
 !packages/react-app/src/contracts/contracts.js
-
+packages/hardhat/.openzeppelin/unknown-31337.json
 
 # ts
 packages/hardhat-ts/cache

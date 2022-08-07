@@ -1,9 +1,8 @@
 import { Badge, Calendar, Tag } from "antd";
 import { useState } from "react";
 import moment from "moment";
-import { useDailyPrices } from "../hooks";
 import { ethers } from "ethers";
-import useDailyPromos from "../hooks/useDailyPromos";
+import { useDailyPromos, useDailyPrices } from "../hooks/";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import BookPromotionModal from "../components/BookPromotionModal";
 const {
@@ -47,7 +46,7 @@ const Promotions = props => {
   };
 
   const dateCellRender = date => {
-    const dateInUnixSeconds = date.utc().startOf('day').unix();
+    const dateInUnixSeconds = date.utc().startOf("day").unix();
     let cost = dailyPricesHash[dateInUnixSeconds];
     if (cost) {
       cost = ethers.utils.formatUnits(cost, 6);

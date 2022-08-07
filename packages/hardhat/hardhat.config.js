@@ -90,6 +90,12 @@ module.exports = {
           command: "run",
           params: { script: "scripts/deploy/03_upgrade_to_FooV3_impl.js" },
         },
+        {
+          command: "run",
+          params: {
+            script: "scripts/deploy/04_deploy_Promotions_proxy_and_impl.js",
+          },
+        },
       ],
     },
     test: {
