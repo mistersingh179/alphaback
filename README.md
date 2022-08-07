@@ -11,3 +11,9 @@
 
 - ui should show preview of image
 - use checkupkeep & performUpKeep to keep promo dates to dates in future
+
+# Startup
+- yarn chain
+- yarn deploy --watch
+- yarn hh watch deploy_proxies
+- yarn start
