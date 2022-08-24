@@ -105,6 +105,22 @@ function App(props) {
       : targetNetwork.rpcUrl,
   ]);
   const mainnetProvider = useStaticJsonRPC(providers);
+  useEffect(() => {
+    if (mainnetProvider) {
+      console.log("*** setting localProvider polling to false");
+      mainnetProvider.polling = false;
+      mainnetProvider.pollingInterval = 99999999999;
+    }
+  }, [mainnetProvider]);
+  useEffect(() => {
+    if (localProvider) {
+      console.log("*** setting localProvider polling to false");
+      localProvider.polling = false;
+      localProvider.pollingInterval = 99999999999;
+    }
+  }, [localProvider]);
+  window.localProvider = localProvider;
+  window.mainnetProvider = mainnetProvider;
 
   if (DEBUG) console.log(`Using ${selectedNetwork} network`);
 
