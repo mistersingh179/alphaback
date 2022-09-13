@@ -1049,8 +1049,26 @@
       "name": "localhost",
       "chainId": "31337",
       "contracts": {
+        "LeaderBoard": {
+          "address": "0xFafaeABC2CB847d77F4D63EA2773BD8Fa721AA2b",
+          "abi": [
+            {
+              "inputs": [],
+              "name": "foo",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            }
+          ]
+        },
         "Showcase": {
-          "address": "0x28d9a032B5BAc48cf5c47acF24D654006F5C12CB",
+          "address": "0x0D37dD75779e13D7e3618E6Ace1982C097BA99B7",
           "abi": [
             {
               "inputs": [
@@ -1865,7 +1883,7 @@
           ]
         },
         "YourContract": {
-          "address": "0x315109f16631c022B80f6AecE073ebEb522A2f75",
+          "address": "0xfC56414E8FB47C4C58C5A8e5A80E4a657B4946f9",
           "abi": [
             {
               "inputs": [],

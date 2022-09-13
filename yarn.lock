@@ -12078,10 +12078,10 @@ hardhat-gas-reporter@^1.0.4:
     eth-gas-reporter "^0.2.20"
     sha1 "^1.1.1"
 
-hardhat-watcher@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/hardhat-watcher/-/hardhat-watcher-2.3.0.tgz#57586a7fb79b73365014794f7e3dc0706aa65b7d"
-  integrity sha512-u76a/1pxPyW9DRZ7FZ8HoSQ4AuKOiSDQTR2NyiZlH5f0Ux+qQfahsh9CNusRLhx2s1OWzlkwCVvrdHq5FTGUzw==
+hardhat-watcher@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/hardhat-watcher/-/hardhat-watcher-2.5.0.tgz#3ee76c3cb5b99f2875b78d176207745aa484ed4a"
+  integrity sha512-Su2qcSMIo2YO2PrmJ0/tdkf+6pSt8zf9+4URR5edMVti6+ShI8T3xhPrwugdyTOFuyj8lKHrcTZNKUFYowYiyA==
   dependencies:
     chokidar "^3.5.3"
 

@@ -22,13 +22,12 @@ async function main() {
   // const accounts = await ethers.getSigners();
   const chainId = await getChainId();
   const localChainId = "31337";
-  const implName = "PromotionsV1"; /* !! CHANGE ME !! */
-  const proxyContractName = "Promotions"; /* !! CHANGE ME !! */
+  const implName = "LeaderBoardV1"; /* !! CHANGE ME !! */
+  const proxyContractName = "LeaderBoard"; /* !! CHANGE ME !! */
   const contractFileLocations = [
     "/Users/sandeeparneja/code_mistersingh179/alphaback_v2/src/contracts/proxy_contracts.json",
-    "/Users/sandeeparneja/code_mistersingh179/alphaback/packages/react-app/src/contracts/proxy_contracts.json"
-  ];
-  /* !! CHANGE ME !! */
+    "/Users/sandeeparneja/code_mistersingh179/alphaback/packages/react-app/src/contracts/proxy_contracts.json",
+  ]; /* !! CHANGE ME !! */
 
   let proxyObj = {};
   try {
@@ -53,6 +52,9 @@ async function main() {
   }
 
   /* !! CHANGE ME !! */
+  const deployerSigner = ethers.provider.getSigner(0);
+  console.log("deployed with address: ", await deployerSigner.getAddress());
+
   let usdcAddress = ethers.constants.AddressZero;
   if (chainId === localChainId) {
     usdcAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"; // from mainnet
@@ -65,62 +67,13 @@ async function main() {
   const Contract = await getContractFactory(implName);
   const contract = await upgrades.deployProxy(
     Contract,
-    [usdcAddress] /* !! CHANGE ME !! */,
+    [] /* !! CHANGE ME !! */,
     {
       kind: "uups",
     }
   );
 
   await contract.deployed();
-
-  /* !! CHANGE ME !! */
-  const deployerSigner = ethers.provider.getSigner(0);
-  const startOfToday = moment.utc().startOf("day").unix();
-  const membersCount = await contract.membersCount();
-  console.log("membersCount: ", membersCount.toNumber(), membersCount.eq(0));
-  if (membersCount.eq(0) && chainId === "137") {
-    const s = "0x378a29135fdFE323414189f682b061fc64aDC0B3";
-    const r = "0xdDb1a644f0d61a3E03E9076221BaedA4b70200CE";
-    const result = await contract.addMembers(
-      [s, r],
-      [startOfToday, startOfToday]
-    );
-    console.log(result);
-  } else if (chainId === localChainId) {
-    try {
-      const chromeBrowserAddress = "0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283";
-      const safariBrowserAddress = "0x8d4941EC90849bF71d4A39C953e3153C953afFb9";
-      const s = "0x378a29135fdFE323414189f682b061fc64aDC0B3";
-      const r = "0xdDb1a644f0d61a3E03E9076221BaedA4b70200CE";
-      const admin = "0x6B09B3C63B72fF54Bcb7322B607E304a13Fba72B";
-      const result = await contract.addMembers(
-        [chromeBrowserAddress, safariBrowserAddress, s, r, admin],
-        Array(5).fill(startOfToday)
-      );
-      console.log(result);
-      await deployerSigner.sendTransaction({
-        to: chromeBrowserAddress,
-        value: ethers.utils.parseEther("1.01"),
-      });
-      const whaleAddress = "0x72a53cdbbcc1b9efa39c834a540550e23463aacb";
-      await deployerSigner.sendTransaction({
-        to: whaleAddress,
-        value: ethers.utils.parseEther("1.01"),
-      });
-      await hre.network.provider.request({
-        method: "hardhat_impersonateAccount",
-        params: [whaleAddress],
-      });
-      const provider = ethers.getDefaultProvider("http://localhost:8545");
-      const signer = await provider.getSigner(whaleAddress);
-      const usdcContract = new ethers.Contract(usdcAddress, erc20Abi, provider);
-      await usdcContract
-        .connect(signer)
-        .transfer(chromeBrowserAddress, ethers.utils.parseUnits("1000", 6));
-    } catch (e) {
-      console.log("");
-    }
-  }
 
   if (!proxyObj[chainId]) {
     proxyObj[chainId] = {};
@@ -135,6 +88,11 @@ async function main() {
   contractFileLocations.forEach((filePath) => {
     fs.writeFileSync(filePath, JSON.stringify(proxyObj, null, 2));
   });
+  if (chainId === localChainId) {
+    const s = "0x378a29135fdFE323414189f682b061fc64aDC0B3";
+    console.log("making s owner");
+    await contract.transferOwnership(s);
+  }
 }
 
 main().catch((error) => {

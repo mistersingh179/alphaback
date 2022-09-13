@@ -15,5 +15,5 @@
 # Startup
 - yarn chain
 - yarn deploy --watch
-- yarn hh watch deploy_proxies
+- hh watch deploy_proxies
 - yarn start

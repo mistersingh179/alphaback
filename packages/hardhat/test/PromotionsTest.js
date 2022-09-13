@@ -27,7 +27,7 @@ const {
   loadFixture,
 } = waffle;
 
-describe.only("Promotions", () => {
+describe("Promotions", () => {
   const TODAYS_DATE = moment().utc().startOf("day").unix();
   const YESTERDAYS_DATE = moment.unix(TODAYS_DATE).subtract(1, "days").unix();
   const TOMORROWS_DATE = moment.unix(TODAYS_DATE).add(1, "days").unix();

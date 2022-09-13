@@ -73,6 +73,7 @@ module.exports = {
       tasks: ["compile"],
     },
     deploy_proxies: {
+      runOnLaunch: true,
       files: ["./contracts", "./scripts/deploy/**.js"],
       tasks: [
         "compile",
@@ -96,11 +97,25 @@ module.exports = {
             script: "scripts/deploy/04_deploy_Promotions_proxy_and_impl.js",
           },
         },
+        {
+          command: "run",
+          params: {
+            script: "scripts/deploy/05_deploy_LeaderBoard_proxy_and_impl.js",
+          },
+        },
       ],
     },
     test: {
+      runOnLaunch: true,
       files: ["./contracts", "./test/**.js"],
-      tasks: ["test"],
+      tasks: [
+        {
+          command: "test",
+          params: {
+            network: "hardhat",
+          },
+        },
+      ],
     },
   },
 
@@ -660,7 +675,7 @@ task("send", "Send ETH")
       ).toHexString(),
       nonce: await fromSigner.getTransactionCount(),
       gasPrice: parseUnits(
-        taskArgs.gasPrice ? taskArgs.gasPrice : "1.001",
+        taskArgs.gasPrice ? taskArgs.gasPrice : "50.0",
         "gwei"
       ).toHexString(),
       gasLimit: taskArgs.gasLimit ? taskArgs.gasLimit : 24000,
