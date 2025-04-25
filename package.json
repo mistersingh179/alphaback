@@ -8,7 +8,8 @@
     "workspaces",
     "yarn"
   ],
-  "private": true,
+  "private": false,
+  "license": "MIT",
   "scripts": {
     "react-app:build": "yarn workspace @scaffold-eth/react-app build --max-old-space-size=12288",
     "react-app:eject": "yarn workspace @scaffold-eth/react-app eject",

@@ -19,14 +19,14 @@ const {
 const { erc1967 } = upgrades;
 
 async function main() {
-  // const accounts = await ethers.getSigners();
+  const accounts = await ethers.getSigners();
   const chainId = await getChainId();
   const localChainId = "31337";
   const implName = "PromotionsV1"; /* !! CHANGE ME !! */
   const proxyContractName = "Promotions"; /* !! CHANGE ME !! */
   const contractFileLocations = [
+    "/Users/sandeeparneja/code_mistersingh179/alphaback/packages/react-app/src/contracts/proxy_contracts.json",
     "/Users/sandeeparneja/code_mistersingh179/alphaback_v2/src/contracts/proxy_contracts.json",
-    "/Users/sandeeparneja/code_mistersingh179/alphaback/packages/react-app/src/contracts/proxy_contracts.json"
   ];
   /* !! CHANGE ME !! */
 
